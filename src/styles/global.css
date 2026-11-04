@@ -1,0 +1,27 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    /* 1rem continua escalando com a tela para o layout do cardápio */
+    font-size: 16px;
+  }
+
+  body {
+    @apply bg-cream font-sans text-deep;
+  }
+}
+
+/* Classes utilitárias reusáveis do design system */
+@layer components {
+  /* Selo redondo de preço sobre o copo 3D */
+  .badge-selo {
+    @apply absolute flex aspect-square w-[28%] max-w-[150px] -rotate-[9deg] flex-col items-center justify-center rounded-full bg-magenta text-center text-white;
+    right: 2%;
+    top: 3%;
+    box-shadow:
+      0 10px 24px rgba(122, 27, 154, 0.35),
+      inset 0 0 0 4px rgba(255, 255, 255, 0.28);
+  }
+}
