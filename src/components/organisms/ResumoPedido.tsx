@@ -1,4 +1,4 @@
-import { COPO_TRUFADO, formatarPreco } from '../../data/menu';
+import { CATEGORIAS, formatarPreco } from '../../data/menu';
 import type { ResumoPedido as Resumo } from '../../hooks/usePedido';
 
 interface Props {
@@ -8,10 +8,8 @@ interface Props {
 
 /** Organismo: resumo do pedido com total em tempo real. */
 export function ResumoPedido({ resumo, onLimpar }: Props) {
-  const { tamanho } = resumo;
+  const { tamanho, linha, sabor } = resumo;
   if (!tamanho) return null;
-
-  const nomeTrufado = COPO_TRUFADO.find((t) => t.id === resumo.trufado)?.nome;
 
   return (
     <div className="mt-5 rounded-xl border border-white/30 bg-white/10 px-5 py-4 text-white">
@@ -19,35 +17,31 @@ export function ResumoPedido({ resumo, onLimpar }: Props) {
         Seu açaí
       </div>
 
+      <Linha label="Açaí">{linha.nome}</Linha>
+      {sabor && <Linha label="Sabor">{sabor}</Linha>}
       <Linha label="Tamanho">
         {tamanho.volume} · {formatarPreco(tamanho.preco)}
       </Linha>
-      {resumo.frutas.length > 0 && (
-        <Linha label={`Frutas${resumo.frutasExtras ? ` (+${resumo.frutasExtras} extra)` : ''}`}>
-          {resumo.frutas.join(', ')}
-        </Linha>
-      )}
-      {resumo.coberturas.length > 0 && (
-        <Linha label={`Coberturas${resumo.coberturasExtras ? ` (+${resumo.coberturasExtras} extra)` : ''}`}>
-          {resumo.coberturas.join(', ')}
-        </Linha>
-      )}
-      {resumo.acompanhamentos.length > 0 && (
-        <Linha
-          label={`Acompanhamentos${resumo.acompanhamentosExtras ? ` (+${resumo.acompanhamentosExtras} extra)` : ''}`}
-        >
-          {resumo.acompanhamentos.join(', ')}
-        </Linha>
-      )}
-      {nomeTrufado && <Linha label="Trufado">{nomeTrufado}</Linha>}
 
-      {resumo.valorExtras > 0 && (
-        <Linha label={`Adicionais (${resumo.totalExtrasItens} item)`}>
-          {formatarPreco(resumo.valorExtras)}
-        </Linha>
+      {CATEGORIAS.map((cat) => {
+        const itens = resumo.selecoes[cat.id];
+        return itens.length > 0 ? (
+          <Linha key={cat.id} label={cat.titulo}>
+            {itens.join(', ')}
+          </Linha>
+        ) : null;
+      })}
+
+      {resumo.adicionaisAConfirmar.length > 0 && (
+        <p className="mt-2 rounded-lg bg-amber/20 px-3 py-2 text-xs text-amber">
+          Valor a confirmar com a loja: {resumo.adicionaisAConfirmar.join(', ')}
+        </p>
       )}
-      {resumo.valorTrufado > 0 && (
-        <Linha label="Copo trufado">{formatarPreco(resumo.valorTrufado)}</Linha>
+
+      {resumo.precisaSabor && !sabor && (
+        <p className="mt-2 rounded-lg bg-white/15 px-3 py-2 text-xs font-bold">
+          Escolha o sabor da batida para enviar o pedido.
+        </p>
       )}
 
       <div className="mt-3 flex items-center justify-between border-t border-white/35 pt-3 text-lg font-bold">
@@ -69,7 +63,7 @@ export function ResumoPedido({ resumo, onLimpar }: Props) {
 function Linha({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="flex justify-between gap-2 py-1 text-sm opacity-95">
-      <span className="text-white/70">{label}</span>
+      <span className="flex-none text-white/70">{label}</span>
       <span className="text-right">{children}</span>
     </div>
   );

@@ -1,107 +1,106 @@
 import { useMemo, useState } from 'react';
 import {
-  PRECO_ADICIONAL_ITEM,
-  PRECO_TRUFADO,
-  TamanhoAcai,
+  ADICIONAIS,
+  CATEGORIAS,
+  LINHAS,
+  type CategoriaId,
+  type LinhaAcai,
+  type LinhaId,
+  type TamanhoPreco,
 } from '../data/menu';
 
+type Selecoes = Record<CategoriaId, string[]>;
+
+const selecoesVazias = (): Selecoes =>
+  Object.fromEntries(CATEGORIAS.map((c) => [c.id, []])) as unknown as Selecoes;
+
 export interface ResumoPedido {
-  tamanho: TamanhoAcai | null;
-  frutas: string[];
-  coberturas: string[];
-  acompanhamentos: string[];
-  trufado: string | null;
-  // extras acima do limite incluso
-  frutasExtras: number;
-  coberturasExtras: number;
-  acompanhamentosExtras: number;
-  totalExtrasItens: number;
-  valorExtras: number;
-  valorTrufado: number;
+  linha: LinhaAcai;
+  sabor: string | null;
+  tamanho: TamanhoPreco | null;
+  selecoes: Selecoes;
+  /** Adicionais escolhidos cujo valor a loja ainda não definiu. */
+  adicionaisAConfirmar: string[];
+  /** A linha escolhida exige sabor (batidas). */
+  precisaSabor: boolean;
+  /** Tem tamanho e, quando exigido, sabor — pode enviar o pedido. */
+  completo: boolean;
   total: number;
 }
 
 export function usePedido() {
-  const [tamanho, setTamanho] = useState<TamanhoAcai | null>(null);
-  const [frutas, setFrutas] = useState<string[]>([]);
-  const [coberturas, setCoberturas] = useState<string[]>([]);
-  const [acompanhamentos, setAcompanhamentos] = useState<string[]>([]);
-  const [trufado, setTrufado] = useState<string | null>(null);
+  const [linhaId, setLinhaId] = useState<LinhaId>('tradicional');
+  const [sabor, setSabor] = useState<string | null>(null);
+  const [tamanhoId, setTamanhoId] = useState<string | null>(null);
+  const [selecoes, setSelecoes] = useState<Selecoes>(selecoesVazias);
 
-  function toggle(
-    valor: string,
-    lista: string[],
-    setLista: (v: string[]) => void,
-  ) {
-    if (lista.includes(valor)) {
-      setLista(lista.filter((item) => item !== valor));
-    } else {
-      setLista([...lista, valor]);
-    }
+  const linha = LINHAS.find((l) => l.id === linhaId) ?? LINHAS[0];
+
+  function escolherLinha(id: LinhaId) {
+    setLinhaId(id);
+    // sabor só existe nas batidas
+    if (id !== 'batida') setSabor(null);
   }
 
-  const toggleFruta = (v: string) => toggle(v, frutas, setFrutas);
-  const toggleCobertura = (v: string) => toggle(v, coberturas, setCoberturas);
-  const toggleAcompanhamento = (v: string) =>
-    toggle(v, acompanhamentos, setAcompanhamentos);
+  function alternarSabor(nome: string) {
+    setSabor((atual) => (atual === nome ? null : nome));
+  }
 
-  function escolherTamanho(novo: TamanhoAcai) {
-    // Ao trocar de tamanho, mantém escolhas mas recalcula extras automaticamente.
-    setTamanho(novo);
+  function alternarItem(categoria: CategoriaId, valor: string) {
+    setSelecoes((atual) => {
+      const lista = atual[categoria];
+      return {
+        ...atual,
+        [categoria]: lista.includes(valor)
+          ? lista.filter((item) => item !== valor)
+          : [...lista, valor],
+      };
+    });
   }
 
   function limpar() {
-    setTamanho(null);
-    setFrutas([]);
-    setCoberturas([]);
-    setAcompanhamentos([]);
-    setTrufado(null);
+    setLinhaId('tradicional');
+    setSabor(null);
+    setTamanhoId(null);
+    setSelecoes(selecoesVazias());
   }
 
   const resumo: ResumoPedido = useMemo(() => {
-    const frutasExtras = tamanho
-      ? Math.max(0, frutas.length - tamanho.frutas)
-      : 0;
-    const coberturasExtras = tamanho
-      ? Math.max(0, coberturas.length - tamanho.coberturas)
-      : 0;
-    const acompanhamentosExtras = tamanho
-      ? Math.max(0, acompanhamentos.length - tamanho.acompanhamentos)
-      : 0;
+    const tamanho = linha.tamanhos.find((t) => t.id === tamanhoId) ?? null;
+    const precisaSabor = !!linha.sabores;
 
-    const totalExtrasItens =
-      frutasExtras + coberturasExtras + acompanhamentosExtras;
-    const valorExtras = totalExtrasItens * PRECO_ADICIONAL_ITEM;
-    const valorTrufado = trufado ? PRECO_TRUFADO : 0;
-    const base = tamanho?.preco ?? 0;
+    // Batida não leva complementos: as escolhas ficam guardadas, mas não contam.
+    const selecoesDoPedido = linha.personalizavel ? selecoes : selecoesVazias();
+
+    let totalAdicionais = 0;
+    const adicionaisAConfirmar: string[] = [];
+    for (const nome of selecoesDoPedido.adicionais) {
+      const preco = ADICIONAIS.find((a) => a.nome === nome)?.preco ?? null;
+      if (preco === null) adicionaisAConfirmar.push(nome);
+      else totalAdicionais += preco;
+    }
 
     return {
+      linha,
+      sabor,
       tamanho,
-      frutas,
-      coberturas,
-      acompanhamentos,
-      trufado,
-      frutasExtras,
-      coberturasExtras,
-      acompanhamentosExtras,
-      totalExtrasItens,
-      valorExtras,
-      valorTrufado,
-      total: base + valorExtras + valorTrufado,
+      selecoes: selecoesDoPedido,
+      adicionaisAConfirmar,
+      precisaSabor,
+      completo: tamanho !== null && (!precisaSabor || sabor !== null),
+      total: (tamanho?.preco ?? 0) + totalAdicionais,
     };
-  }, [tamanho, frutas, coberturas, acompanhamentos, trufado]);
+  }, [linha, sabor, tamanhoId, selecoes]);
 
   return {
-    tamanho,
-    frutas,
-    coberturas,
-    acompanhamentos,
-    trufado,
-    setTrufado,
-    escolherTamanho,
-    toggleFruta,
-    toggleCobertura,
-    toggleAcompanhamento,
+    linha,
+    sabor,
+    tamanho: resumo.tamanho,
+    selecoes,
+    escolherLinha,
+    alternarSabor,
+    escolherTamanho: setTamanhoId,
+    alternarItem,
     limpar,
     resumo,
   };

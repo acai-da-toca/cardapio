@@ -1,4 +1,4 @@
-import { COPO_TRUFADO, formatarPreco } from '../../data/menu';
+import { CATEGORIAS, formatarPreco } from '../../data/menu';
 import { WHATSAPP } from '../../data/loja';
 import type { ResumoPedido as Resumo } from '../../hooks/usePedido';
 
@@ -9,24 +9,29 @@ interface Props {
 /** Monta a mensagem de pedido em texto a partir do resumo. */
 function montarMensagem(r: Resumo): string {
   if (!r.tamanho) return '';
+  const nome = r.sabor ? `${r.linha.nome} – ${r.sabor}` : r.linha.nome;
   const linhas: string[] = ['Olá! Quero montar meu açaí 🍨', ''];
-  linhas.push(`🥤 Tamanho: ${r.tamanho.volume} (${formatarPreco(r.tamanho.preco)})`);
-  if (r.frutas.length) linhas.push(`🍓 Frutas: ${r.frutas.join(', ')}`);
-  if (r.coberturas.length) linhas.push(`🍫 Coberturas: ${r.coberturas.join(', ')}`);
-  if (r.acompanhamentos.length)
-    linhas.push(`✨ Acompanhamentos: ${r.acompanhamentos.join(', ')}`);
-  const trufado = COPO_TRUFADO.find((t) => t.id === r.trufado)?.nome;
-  if (trufado) linhas.push(`🍯 Trufado: ${trufado}`);
-  linhas.push('', `💰 Total: ${formatarPreco(r.total)}`);
+  linhas.push(`🥤 ${nome} ${r.tamanho.volume} (${formatarPreco(r.tamanho.preco)})`);
+  for (const cat of CATEGORIAS) {
+    const itens = r.selecoes[cat.id];
+    if (itens.length) linhas.push(`${cat.emoji} ${cat.titulo}: ${itens.join(', ')}`);
+  }
+  if (r.adicionaisAConfirmar.length)
+    linhas.push('', `Obs.: valor a confirmar: ${r.adicionaisAConfirmar.join(', ')}`);
+  linhas.push(
+    '',
+    `💰 Total${r.adicionaisAConfirmar.length ? ' (sem os adicionais a confirmar)' : ''}: ${formatarPreco(r.total)}`,
+  );
   return linhas.join('\n');
 }
 
 /**
- * Organismo: CTA de pedido. Barra fixa que desliza de baixo quando o cliente
- * escolhe o tamanho — transforma "ver o cardápio" em "fazer o pedido".
+ * Organismo: CTA de pedido. Barra fixa que desliza de baixo quando o pedido
+ * está completo (tamanho e, nas batidas, o sabor) — transforma "ver o
+ * cardápio" em "fazer o pedido".
  */
 export function BotaoPedido({ resumo }: Props) {
-  if (!resumo.tamanho) return null;
+  if (!resumo.completo || !resumo.tamanho) return null;
 
   const mensagem = montarMensagem(resumo);
   const href = WHATSAPP

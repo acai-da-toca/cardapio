@@ -4,36 +4,37 @@ import { RevealOnScroll } from './components/atoms/RevealOnScroll';
 import { SectionHeading } from './components/atoms/SectionHeading';
 import { ChipGroup } from './components/molecules/ChipGroup';
 import { BotaoPedido } from './components/organisms/BotaoPedido';
-import { Extras } from './components/organisms/Extras';
 import { HeroVideo } from './components/organisms/HeroVideo';
 import { ResumoPedido } from './components/organisms/ResumoPedido';
+import { SeletorLinha } from './components/organisms/SeletorLinha';
 import { SeletorTamanho } from './components/organisms/SeletorTamanho';
-import { TabelaInclusoes } from './components/organisms/TabelaInclusoes';
 import { CardapioTemplate } from './components/templates/CardapioTemplate';
 import { HERO_VIDEO } from './data/copo';
 import { LOJA } from './data/loja';
-import { ACOMPANHAMENTOS, COBERTURAS, FRUTAS } from './data/menu';
+import { CATEGORIAS } from './data/menu';
 import { usePedido } from './hooks/usePedido';
 
-/** Página: cardápio "Monte seu Açaí" com conteúdo real. */
+/** Página: cardápio do Açaí da Toca com conteúdo real. */
 export default function App() {
   const pedido = usePedido();
-  const { tamanho } = pedido;
 
   const topo = (
     <>
       <RevealOnScroll>
-        <SectionHeading numero={1} titulo="Escolha o tamanho" />
-        <SeletorTamanho
-          selecionado={tamanho}
-          onSelecionar={pedido.escolherTamanho}
+        <SectionHeading numero={1} titulo="Escolha o seu açaí" />
+        <SeletorLinha
+          linhaSelecionada={pedido.linha.id}
+          onSelecionarLinha={pedido.escolherLinha}
+          sabor={pedido.sabor}
+          onAlternarSabor={pedido.alternarSabor}
         />
       </RevealOnScroll>
 
       <RevealOnScroll delay={0.05}>
-        <SectionHeading numero={2} titulo="Escolha os acompanhamentos" />
-        <TabelaInclusoes
-          selecionado={tamanho}
+        <SectionHeading numero={2} titulo="Escolha o tamanho" />
+        <SeletorTamanho
+          linha={pedido.linha}
+          selecionado={pedido.tamanho}
           onSelecionar={pedido.escolherTamanho}
         />
       </RevealOnScroll>
@@ -42,45 +43,32 @@ export default function App() {
 
   const band = (
     <>
-      <RevealOnScroll>
-        <div className="mb-4 flex items-center gap-3">
-          <div className="min-w-0 flex-1">
-            <SectionHeading numero={3} titulo="Monte do seu jeito" light />
-          </div>
-          <div className="hidden flex-none sm:block">
-            <DicaToque />
-          </div>
-        </div>
-      </RevealOnScroll>
+      {/* Só o Tradicional é montado pelo cliente; a batida vem pronta na garrafinha. */}
+      {pedido.linha.personalizavel && (
+        <>
+          <RevealOnScroll>
+            <div className="mb-4 flex items-center gap-3">
+              <div className="min-w-0 flex-1">
+                <SectionHeading numero={3} titulo="Monte do seu jeito" light />
+              </div>
+              <div className="hidden flex-none sm:block">
+                <DicaToque />
+              </div>
+            </div>
+          </RevealOnScroll>
 
-      <ChipGroup
-        titulo="Frutas"
-        cor="fruta"
-        opcoes={FRUTAS}
-        selecionados={pedido.frutas}
-        incluso={tamanho?.frutas ?? null}
-        onToggle={pedido.toggleFruta}
-      />
-      <ChipGroup
-        titulo="Coberturas"
-        cor="cobertura"
-        opcoes={COBERTURAS}
-        selecionados={pedido.coberturas}
-        incluso={tamanho?.coberturas ?? null}
-        onToggle={pedido.toggleCobertura}
-      />
-      <ChipGroup
-        titulo="Acompanhamentos"
-        cor="acompanhamento"
-        opcoes={ACOMPANHAMENTOS}
-        selecionados={pedido.acompanhamentos}
-        incluso={tamanho?.acompanhamentos ?? null}
-        onToggle={pedido.toggleAcompanhamento}
-      />
-
-      <RevealOnScroll>
-        <Extras trufado={pedido.trufado} onTrufado={pedido.setTrufado} />
-      </RevealOnScroll>
+          {CATEGORIAS.map((cat) => (
+            <ChipGroup
+              key={cat.id}
+              titulo={cat.titulo}
+              cor={cat.cor}
+              opcoes={cat.opcoes}
+              selecionados={pedido.selecoes[cat.id]}
+              onToggle={(valor) => pedido.alternarItem(cat.id, valor)}
+            />
+          ))}
+        </>
+      )}
 
       <ResumoPedido resumo={pedido.resumo} onLimpar={pedido.limpar} />
 

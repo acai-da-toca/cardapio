@@ -1,30 +1,51 @@
 import { motion } from 'framer-motion';
-import { CherrySplash } from './CherrySplash';
+import type { CorCategoria } from '../../data/menu';
 import { useCherrySplash } from '../../hooks/useCherrySplash';
+import { CherrySplash } from './CherrySplash';
 
-type Cor = 'fruta' | 'cobertura' | 'acompanhamento';
-
-const COR_HEX: Record<Cor, string> = {
+const COR_HEX: Record<CorCategoria, string> = {
   fruta: '#FF7A8A',
   cobertura: '#8FD694',
-  acompanhamento: '#FDB75B',
+  complemento: '#FDB75B',
+  sorvete: '#7FD1FF',
+  adicional: '#FF8A5B',
+  sabor: '#C2307F',
 };
 
 interface Props {
   label: string;
-  cor: Cor;
+  cor: CorCategoria;
   ativo: boolean;
   onToggle: () => void;
+  /** 'escuro' = sobre fundo roxo (padrão); 'claro' = sobre fundo creme. */
+  tema?: 'escuro' | 'claro';
 }
 
 /**
  * Átomo: chip selecionável. Ao tocar, uma mancha de cereja esmagada espirra no
  * ponto exato do clique (signature moment). Estado selecionado bem visível:
- * preenchido branco + anel da cor do grupo.
+ * preenchido + anel da cor do grupo + "✓".
  */
-export function Chip({ label, cor, ativo, onToggle }: Props) {
+export function Chip({ label, cor, ativo, onToggle, tema = 'escuro' }: Props) {
   const hex = COR_HEX[cor];
+  const claro = tema === 'claro';
   const { pontos, disparar } = useCherrySplash();
+
+  const estilo = ativo
+    ? claro
+      ? 'bg-purple text-white shadow-md'
+      : 'bg-white text-deep shadow-md'
+    : claro
+      ? 'border-purple/30 bg-white text-purple'
+      : 'border-white/40 bg-white/10 text-white';
+
+  const corIndicador = ativo
+    ? claro
+      ? 'text-amber'
+      : 'text-magenta'
+    : claro
+      ? 'text-purple/50'
+      : 'text-white/60';
 
   return (
     <motion.button
@@ -38,11 +59,7 @@ export function Chip({ label, cor, ativo, onToggle }: Props) {
       whileTap={{ scale: 0.9 }}
       whileHover={{ scale: 1.06 }}
       transition={{ type: 'spring', stiffness: 500, damping: 28 }}
-      className={`relative flex items-center gap-2 overflow-hidden rounded-full border-2 px-3 py-1.5 text-sm font-bold ${
-        ativo
-          ? 'bg-white text-deep shadow-md'
-          : 'border-white/40 bg-white/10 text-white'
-      }`}
+      className={`relative flex items-center gap-2 overflow-hidden rounded-full border-2 px-3 py-1.5 text-sm font-bold ${estilo}`}
       style={ativo ? { borderColor: hex } : undefined}
     >
       <CherrySplash pontos={pontos} camada="front" />
@@ -58,9 +75,7 @@ export function Chip({ label, cor, ativo, onToggle }: Props) {
 
       {/* affordance: + para adicionar, ✓ quando selecionado */}
       <span
-        className={`relative z-[1] ml-0.5 text-xs font-bold ${
-          ativo ? 'text-magenta' : 'text-white/60'
-        }`}
+        className={`relative z-[1] ml-0.5 text-xs font-bold ${corIndicador}`}
         aria-hidden="true"
       >
         {ativo ? '✓' : '+'}
