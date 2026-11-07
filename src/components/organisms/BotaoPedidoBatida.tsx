@@ -21,7 +21,7 @@ function montarMensagem(
   const linhas = [
     'Olá! Quero pedir uma batida de açaí',
     '',
-    `Batida: ${sabor.nome} – ${tamanho.volume}`,
+    `Batida: ${sabor.nome} (${tamanho.volume})`,
     '',
     `Total: ${formatarPreco(preco)}`,
   ];

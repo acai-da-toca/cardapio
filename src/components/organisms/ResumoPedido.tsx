@@ -64,12 +64,12 @@ export function ResumoPedido({ resumo, onLimpar, onFormaPagamento }: Props) {
       )}
 
       <div className="mt-3 flex items-center justify-between border-t border-white/35 pt-3 text-lg font-bold">
-        <span>Total</span>
+        <span>{resumo.temItemAConfirmar ? 'Total do açaí' : 'Total'}</span>
         <span className="text-2xl text-amber">{formatarPreco(resumo.total)}</span>
       </div>
       {resumo.temItemAConfirmar && (
         <p className="mt-1 text-xs text-white/60">
-          Sorvete é vendido por peso — o valor é combinado com a loja pelo WhatsApp.
+          Não inclui o sorvete, vendido por peso. O valor é combinado com a loja pelo WhatsApp.
         </p>
       )}
 

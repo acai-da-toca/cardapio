@@ -104,7 +104,7 @@ export default function App() {
             htmlFor="observacao-sorvete"
             className="mb-1.5 block text-xs text-white/70"
           >
-            Sorvete é vendido por peso — quer dizer quanto ou algo específico?
+            Sorvete é vendido por peso. Quer dizer quanto ou algo específico?
           </label>
           <CampoObservacao
             id="observacao-sorvete"

@@ -25,7 +25,10 @@ function montarMensagem(r: Resumo): string {
     );
   const trufado = COPO_TRUFADO.find((t) => t.id === r.trufado)?.nome;
   if (trufado) linhas.push(`🍯 Trufado: ${trufado}`);
-  linhas.push('', `💰 Total: ${formatarPreco(r.total)}`);
+  const rotuloTotal = r.temItemAConfirmar ? 'Total do açaí' : 'Total';
+  linhas.push('', `💰 ${rotuloTotal}: ${formatarPreco(r.total)}`);
+  if (r.temItemAConfirmar)
+    linhas.push('(não inclui o sorvete, valor combinado à parte)');
   const pagamento = FORMAS_PAGAMENTO.find((f) => f.id === r.formaPagamento)?.nome;
   if (pagamento) linhas.push(`💳 Pagamento: ${pagamento}`);
   return linhas.join('\n');
@@ -33,8 +36,8 @@ function montarMensagem(r: Resumo): string {
 
 /**
  * Organismo: CTA de pedido. Barra fixa que desliza de baixo quando o cliente
- * escolhe o tamanho e a forma de pagamento — transforma "ver o cardápio" em
- * "fazer o pedido".
+ * escolhe o tamanho e a forma de pagamento, transformando "ver o cardápio"
+ * em "fazer o pedido".
  */
 export function BotaoPedido({ resumo }: Props) {
   if (!resumo.tamanho || !resumo.formaPagamento) return null;

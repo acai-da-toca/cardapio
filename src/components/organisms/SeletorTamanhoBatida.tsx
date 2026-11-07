@@ -47,7 +47,7 @@ export function SeletorTamanhoBatida({ tamanhoId, onSelecionar }: Props) {
         </div>
       </div>
       <p className="text-xs text-purple/70">
-        Valor a partir do Tradicional — o sabor escolhido no próximo passo pode mudar o preço.
+        Valor a partir do Tradicional. O sabor escolhido no próximo passo pode mudar o preço.
       </p>
     </div>
   );
