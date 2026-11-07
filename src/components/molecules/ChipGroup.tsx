@@ -1,22 +1,23 @@
 import { motion } from 'framer-motion';
-import type { CorCategoria } from '../../data/menu';
 import { Chip } from '../atoms/Chip';
+
+type Cor = 'fruta' | 'cobertura' | 'acompanhamento';
 
 interface Props {
   titulo: string;
-  cor: CorCategoria;
+  cor: Cor;
   opcoes: string[];
   selecionados: string[];
+  incluso: number | null;
   onToggle: (valor: string) => void;
-  tema?: 'escuro' | 'claro';
 }
 
-// Os chips surgem em cascata quando a seção entra na tela, sinalizando que
-// são elementos interativos.
+// Variants: os chips surgem em cascata (stagger) quando a seção entra na tela,
+// sinalizando que são elementos interativos.
 const container = {
   hidden: {},
   show: {
-    transition: { staggerChildren: 0.04 },
+    transition: { staggerChildren: 0.05 },
   },
 };
 const item = {
@@ -26,36 +27,42 @@ const item = {
 
 /**
  * Molécula: rótulo + conjunto de chips selecionáveis com um propósito único
- * (escolher complementos, coberturas, frutas...). O rótulo mostra quantos
- * itens já foram escolhidos, o que ajuda em listas longas.
+ * (escolher frutas, coberturas ou acompanhamentos).
  */
 export function ChipGroup({
   titulo,
   cor,
   opcoes,
   selecionados,
+  incluso,
   onToggle,
-  tema = 'escuro',
 }: Props) {
+  const extras =
+    incluso === null ? 0 : Math.max(0, selecionados.length - incluso);
+
   return (
-    <div className="mb-6 last:mb-0">
+    <div className="mb-5 last:mb-0">
       <div className="mb-3 inline-block rounded-md bg-amber px-3 py-1 text-xs font-bold uppercase tracking-[0.18em] text-deep">
         {titulo}
-        {selecionados.length > 0 && <> · {selecionados.length}</>}
+        {incluso !== null && (
+          <>
+            {' '}· {selecionados.length}/{incluso}
+            {extras > 0 ? ` (+${extras})` : ''}
+          </>
+        )}
       </div>
       <motion.div
         className="flex flex-wrap gap-2"
         variants={container}
         initial="hidden"
         whileInView="show"
-        viewport={{ once: true, amount: 0.15 }}
+        viewport={{ once: true, amount: 0.3 }}
       >
         {opcoes.map((opcao) => (
           <motion.div key={opcao} variants={item}>
             <Chip
               label={opcao}
               cor={cor}
-              tema={tema}
               ativo={selecionados.includes(opcao)}
               onToggle={() => onToggle(opcao)}
             />
