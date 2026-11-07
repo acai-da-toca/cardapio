@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import {
   PRECO_ADICIONAL_ITEM,
+  PRECO_MOUSSE,
   PRECO_TRUFADO,
   TamanhoAcai,
 } from '../data/menu';
@@ -11,6 +12,7 @@ export interface ResumoPedido {
   coberturas: string[];
   acompanhamentos: string[];
   sorvetes: string[];
+  observacaoSorvete: string;
   adicionais: string[];
   trufado: string | null;
   formaPagamento: string | null;
@@ -21,8 +23,9 @@ export interface ResumoPedido {
   totalExtrasItens: number;
   valorExtras: number;
   valorTrufado: number;
+  valorAdicionais: number;
   total: number;
-  // sorvetes/adicionais ainda não têm preço definido — true quando algum foi escolhido
+  // sorvete é vendido por peso, sem preço fixo — true quando algum foi escolhido
   temItemAConfirmar: boolean;
 }
 
@@ -32,6 +35,7 @@ export function usePedido() {
   const [coberturas, setCoberturas] = useState<string[]>([]);
   const [acompanhamentos, setAcompanhamentos] = useState<string[]>([]);
   const [sorvetes, setSorvetes] = useState<string[]>([]);
+  const [observacaoSorvete, setObservacaoSorvete] = useState('');
   const [adicionais, setAdicionais] = useState<string[]>([]);
   const [trufado, setTrufado] = useState<string | null>(null);
   const [formaPagamento, setFormaPagamento] = useState<string | null>(null);
@@ -66,6 +70,7 @@ export function usePedido() {
     setCoberturas([]);
     setAcompanhamentos([]);
     setSorvetes([]);
+    setObservacaoSorvete('');
     setAdicionais([]);
     setTrufado(null);
     setFormaPagamento(null);
@@ -86,6 +91,7 @@ export function usePedido() {
       frutasExtras + coberturasExtras + acompanhamentosExtras;
     const valorExtras = totalExtrasItens * PRECO_ADICIONAL_ITEM;
     const valorTrufado = trufado ? PRECO_TRUFADO : 0;
+    const valorAdicionais = adicionais.length * PRECO_MOUSSE;
     const base = tamanho?.preco ?? 0;
 
     return {
@@ -94,6 +100,7 @@ export function usePedido() {
       coberturas,
       acompanhamentos,
       sorvetes,
+      observacaoSorvete,
       adicionais,
       trufado,
       formaPagamento,
@@ -103,8 +110,9 @@ export function usePedido() {
       totalExtrasItens,
       valorExtras,
       valorTrufado,
-      total: base + valorExtras + valorTrufado,
-      temItemAConfirmar: sorvetes.length > 0 || adicionais.length > 0,
+      valorAdicionais,
+      total: base + valorExtras + valorTrufado + valorAdicionais,
+      temItemAConfirmar: sorvetes.length > 0,
     };
   }, [
     tamanho,
@@ -112,6 +120,7 @@ export function usePedido() {
     coberturas,
     acompanhamentos,
     sorvetes,
+    observacaoSorvete,
     adicionais,
     trufado,
     formaPagamento,
@@ -123,10 +132,12 @@ export function usePedido() {
     coberturas,
     acompanhamentos,
     sorvetes,
+    observacaoSorvete,
     adicionais,
     trufado,
     formaPagamento,
     setTrufado,
+    setObservacaoSorvete,
     escolherFormaPagamento: setFormaPagamento,
     escolherTamanho,
     toggleFruta,

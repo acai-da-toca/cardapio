@@ -63,9 +63,9 @@ export const ACOMPANHAMENTOS: string[] = [
   'Ovomaltine',
 ];
 
-// Sorvetes e adicionais (mousse) entram como escolha livre, sem regra de
-// quantidade por tamanho e sem preço definido pela Camila ainda — por isso
-// não entram no total, só aparecem no resumo e na mensagem como "a confirmar".
+// Sorvete é vendido por peso (kg), não por item — por isso não tem preço fixo
+// aqui; o cliente escreve o que quer no campo de observação e a loja confirma
+// o valor pelo WhatsApp. O mousse (adicional) já tem preço fixo por unidade.
 export const SORVETES: string[] = [
   'Morango',
   'Ovomaltine',
@@ -87,6 +87,7 @@ export const COPO_TRUFADO: OpcaoTrufado[] = [
 // Valores de adicionais
 export const PRECO_ADICIONAL_ITEM = 3.0; // adicional por item extra (fruta/cobertura/acomp.)
 export const PRECO_TRUFADO = 5.0; // adicional do copo trufado
+export const PRECO_MOUSSE = 3.0; // cada mousse (adicional)
 
 export function formatarPreco(valor: number): string {
   return valor.toLocaleString('pt-BR', {

@@ -17,9 +17,12 @@ function montarMensagem(r: Resumo): string {
   if (r.acompanhamentos.length)
     linhas.push(`✨ Acompanhamentos: ${r.acompanhamentos.join(', ')}`);
   if (r.sorvetes.length)
-    linhas.push(`🍨 Sorvetes (valor a confirmar): ${r.sorvetes.join(', ')}`);
+    linhas.push(`🍨 Sorvetes (por peso, combinar valor): ${r.sorvetes.join(', ')}`);
+  if (r.observacaoSorvete) linhas.push(`📝 Obs. sorvete: ${r.observacaoSorvete}`);
   if (r.adicionais.length)
-    linhas.push(`➕ Adicionais (valor a confirmar): ${r.adicionais.join(', ')}`);
+    linhas.push(
+      `➕ Adicionais: ${r.adicionais.join(', ')} (${formatarPreco(r.valorAdicionais)})`,
+    );
   const trufado = COPO_TRUFADO.find((t) => t.id === r.trufado)?.nome;
   if (trufado) linhas.push(`🍯 Trufado: ${trufado}`);
   linhas.push('', `💰 Total: ${formatarPreco(r.total)}`);

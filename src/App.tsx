@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { CampoObservacao } from './components/atoms/CampoObservacao';
 import { DicaToque } from './components/atoms/DicaToque';
 import { LogoImg } from './components/atoms/LogoImg';
 import { RevealOnScroll } from './components/atoms/RevealOnScroll';
@@ -97,6 +98,22 @@ export default function App() {
         incluso={null}
         onToggle={pedido.toggleSorvete}
       />
+      {pedido.sorvetes.length > 0 && (
+        <div className="-mt-3 mb-5">
+          <label
+            htmlFor="observacao-sorvete"
+            className="mb-1.5 block text-xs text-white/70"
+          >
+            Sorvete é vendido por peso — quer dizer quanto ou algo específico?
+          </label>
+          <CampoObservacao
+            id="observacao-sorvete"
+            valor={pedido.observacaoSorvete}
+            onChange={pedido.setObservacaoSorvete}
+            placeholder="Ex.: 300g, metade morango e metade chocolate..."
+          />
+        </div>
+      )}
       <ChipGroup
         titulo="Adicionais"
         cor="adicional"

@@ -42,13 +42,14 @@ export function ResumoPedido({ resumo, onLimpar, onFormaPagamento }: Props) {
         </Linha>
       )}
       {resumo.sorvetes.length > 0 && (
-        <Linha label="Sorvetes (valor a confirmar)">
-          {resumo.sorvetes.join(', ')}
-        </Linha>
+        <Linha label="Sorvetes (por peso)">{resumo.sorvetes.join(', ')}</Linha>
+      )}
+      {resumo.observacaoSorvete && (
+        <Linha label="Obs. sorvete">{resumo.observacaoSorvete}</Linha>
       )}
       {resumo.adicionais.length > 0 && (
-        <Linha label="Adicionais (valor a confirmar)">
-          {resumo.adicionais.join(', ')}
+        <Linha label="Adicionais">
+          {resumo.adicionais.join(', ')} · {formatarPreco(resumo.valorAdicionais)}
         </Linha>
       )}
       {nomeTrufado && <Linha label="Trufado">{nomeTrufado}</Linha>}
@@ -68,7 +69,7 @@ export function ResumoPedido({ resumo, onLimpar, onFormaPagamento }: Props) {
       </div>
       {resumo.temItemAConfirmar && (
         <p className="mt-1 text-xs text-white/60">
-          Sorvetes e adicionais ainda não têm preço definido — a loja confirma o valor pelo WhatsApp.
+          Sorvete é vendido por peso — o valor é combinado com a loja pelo WhatsApp.
         </p>
       )}
 
