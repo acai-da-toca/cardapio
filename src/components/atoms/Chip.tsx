@@ -2,12 +2,14 @@ import { motion } from 'framer-motion';
 import { CherrySplash } from './CherrySplash';
 import { useCherrySplash } from '../../hooks/useCherrySplash';
 
-type Cor = 'fruta' | 'cobertura' | 'acompanhamento';
+type Cor = 'fruta' | 'cobertura' | 'acompanhamento' | 'sorvete' | 'adicional';
 
 const COR_HEX: Record<Cor, string> = {
   fruta: '#FF7A8A',
   cobertura: '#8FD694',
   acompanhamento: '#FDB75B',
+  sorvete: '#8EC5FF',
+  adicional: '#C9A6FF',
 };
 
 interface Props {

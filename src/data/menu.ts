@@ -1,7 +1,12 @@
 // Dados do cardápio "Monte seu Açaí".
 // Centralizados aqui para facilitar manutenção de preços e itens.
 
-export type ItemCategoria = 'fruta' | 'cobertura' | 'acompanhamento';
+export type ItemCategoria =
+  | 'fruta'
+  | 'cobertura'
+  | 'acompanhamento'
+  | 'sorvete'
+  | 'adicional';
 
 export interface TamanhoAcai {
   id: string;
@@ -27,7 +32,15 @@ export const TAMANHOS: TamanhoAcai[] = [
 
 export const FRUTAS: string[] = ['Morango', 'Banana', 'Manga', 'Uva'];
 
-export const COBERTURAS: string[] = ['Uva', 'Morango', 'Menta', 'Chocolate'];
+export const COBERTURAS: string[] = [
+  'Uva',
+  'Morango',
+  'Menta',
+  'Chocolate',
+  'Frutas vermelhas',
+  'Chocolate meio amargo',
+  'Chiclete',
+];
 
 export const ACOMPANHAMENTOS: string[] = [
   'Gotas de chocolate',
@@ -38,7 +51,32 @@ export const ACOMPANHAMENTOS: string[] = [
   'Creme de avelã',
   'Cereja',
   'Bis',
+  'Chocobol',
+  'Disquete',
+  'Jujuba',
+  'Creme de Leitinho',
+  'Creme de Cookie',
+  'Granola',
+  'Leite em Pó',
+  'Biscoito Look Wafer',
+  'Nutella',
+  'Ovomaltine',
 ];
+
+// Sorvetes e adicionais (mousse) entram como escolha livre, sem regra de
+// quantidade por tamanho e sem preço definido pela Camila ainda — por isso
+// não entram no total, só aparecem no resumo e na mensagem como "a confirmar".
+export const SORVETES: string[] = [
+  'Morango',
+  'Ovomaltine',
+  'Chocolate',
+  'Pedacinho do Céu',
+  'Maracujá Trufado',
+  'Ninho Trufado',
+  'Iogurte',
+];
+
+export const ADICIONAIS: string[] = ['Mousse Maracujá', 'Mousse Morango'];
 
 export const COPO_TRUFADO: OpcaoTrufado[] = [
   { id: 'nutella', nome: 'Nutella' },

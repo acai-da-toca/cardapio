@@ -1,5 +1,6 @@
 import { COPO_TRUFADO, formatarPreco } from '../../data/menu';
 import { WHATSAPP } from '../../data/loja';
+import { FORMAS_PAGAMENTO } from '../../data/pagamento';
 import type { ResumoPedido as Resumo } from '../../hooks/usePedido';
 
 interface Props {
@@ -15,18 +16,25 @@ function montarMensagem(r: Resumo): string {
   if (r.coberturas.length) linhas.push(`🍫 Coberturas: ${r.coberturas.join(', ')}`);
   if (r.acompanhamentos.length)
     linhas.push(`✨ Acompanhamentos: ${r.acompanhamentos.join(', ')}`);
+  if (r.sorvetes.length)
+    linhas.push(`🍨 Sorvetes (valor a confirmar): ${r.sorvetes.join(', ')}`);
+  if (r.adicionais.length)
+    linhas.push(`➕ Adicionais (valor a confirmar): ${r.adicionais.join(', ')}`);
   const trufado = COPO_TRUFADO.find((t) => t.id === r.trufado)?.nome;
   if (trufado) linhas.push(`🍯 Trufado: ${trufado}`);
   linhas.push('', `💰 Total: ${formatarPreco(r.total)}`);
+  const pagamento = FORMAS_PAGAMENTO.find((f) => f.id === r.formaPagamento)?.nome;
+  if (pagamento) linhas.push(`💳 Pagamento: ${pagamento}`);
   return linhas.join('\n');
 }
 
 /**
  * Organismo: CTA de pedido. Barra fixa que desliza de baixo quando o cliente
- * escolhe o tamanho — transforma "ver o cardápio" em "fazer o pedido".
+ * escolhe o tamanho e a forma de pagamento — transforma "ver o cardápio" em
+ * "fazer o pedido".
  */
 export function BotaoPedido({ resumo }: Props) {
-  if (!resumo.tamanho) return null;
+  if (!resumo.tamanho || !resumo.formaPagamento) return null;
 
   const mensagem = montarMensagem(resumo);
   const href = WHATSAPP

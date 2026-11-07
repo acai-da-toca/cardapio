@@ -1,9 +1,15 @@
+import { useState } from 'react';
 import { DicaToque } from './components/atoms/DicaToque';
 import { LogoImg } from './components/atoms/LogoImg';
 import { RevealOnScroll } from './components/atoms/RevealOnScroll';
 import { SectionHeading } from './components/atoms/SectionHeading';
 import { ChipGroup } from './components/molecules/ChipGroup';
 import { BotaoPedido } from './components/organisms/BotaoPedido';
+import { BotaoPedidoBatida } from './components/organisms/BotaoPedidoBatida';
+import { ResumoBatida } from './components/organisms/ResumoBatida';
+import { SeletorModo, type ModoPedido } from './components/organisms/SeletorModo';
+import { SeletorSabor } from './components/organisms/SeletorSabor';
+import { SeletorTamanhoBatida } from './components/organisms/SeletorTamanhoBatida';
 import { Extras } from './components/organisms/Extras';
 import { HeroVideo } from './components/organisms/HeroVideo';
 import { ResumoPedido } from './components/organisms/ResumoPedido';
@@ -12,13 +18,19 @@ import { TabelaInclusoes } from './components/organisms/TabelaInclusoes';
 import { CardapioTemplate } from './components/templates/CardapioTemplate';
 import { HERO_VIDEO } from './data/copo';
 import { LOJA } from './data/loja';
-import { ACOMPANHAMENTOS, COBERTURAS, FRUTAS } from './data/menu';
+import { ACOMPANHAMENTOS, ADICIONAIS, COBERTURAS, FRUTAS, SORVETES } from './data/menu';
 import { usePedido } from './hooks/usePedido';
+import { usePedidoBatida } from './hooks/usePedidoBatida';
 
 /** Página: cardápio "Monte seu Açaí" com conteúdo real. */
 export default function App() {
   const pedido = usePedido();
   const { tamanho } = pedido;
+
+  // Segunda opção: batida de açaí. Cada fluxo tem o próprio estado, então ao
+  // alternar entre eles nada do que o cliente já escolheu se perde.
+  const [modo, setModo] = useState<ModoPedido>('copo');
+  const batida = usePedidoBatida();
 
   const topo = (
     <>
@@ -77,15 +89,40 @@ export default function App() {
         incluso={tamanho?.acompanhamentos ?? null}
         onToggle={pedido.toggleAcompanhamento}
       />
+      <ChipGroup
+        titulo="Sorvetes"
+        cor="sorvete"
+        opcoes={SORVETES}
+        selecionados={pedido.sorvetes}
+        incluso={null}
+        onToggle={pedido.toggleSorvete}
+      />
+      <ChipGroup
+        titulo="Adicionais"
+        cor="adicional"
+        opcoes={ADICIONAIS}
+        selecionados={pedido.adicionais}
+        incluso={null}
+        onToggle={pedido.toggleAdicional}
+      />
 
       <RevealOnScroll>
         <Extras trufado={pedido.trufado} onTrufado={pedido.setTrufado} />
       </RevealOnScroll>
 
-      <ResumoPedido resumo={pedido.resumo} onLimpar={pedido.limpar} />
+      <ResumoPedido
+        resumo={pedido.resumo}
+        onLimpar={pedido.limpar}
+        onFormaPagamento={pedido.escolherFormaPagamento}
+      />
 
       <BotaoPedido resumo={pedido.resumo} />
+    </>
+  );
 
+  // Rodapé compartilhado pelos dois modos (conteúdo idêntico ao de antes).
+  const rodape = (
+    <>
       {/* respiro + divisória sutil separando o footer do conteúdo */}
       <footer className="mt-12 flex flex-col items-center gap-3 border-t border-white/15 pt-8">
         <LogoImg className="size-16 flex-none rounded-full border-2 border-amber" />
@@ -121,11 +158,83 @@ export default function App() {
     </>
   );
 
+  const seletorModo = (
+    <RevealOnScroll>
+      <SeletorModo modo={modo} onSelecionar={setModo} />
+    </RevealOnScroll>
+  );
+
+  const topoBatida = (
+    <>
+      <RevealOnScroll>
+        <SectionHeading numero={1} titulo="Escolha o tamanho" />
+        <SeletorTamanhoBatida
+          tamanhoId={batida.tamanho?.id ?? null}
+          onSelecionar={batida.escolherTamanho}
+        />
+      </RevealOnScroll>
+
+      <RevealOnScroll delay={0.05}>
+        <SectionHeading numero={2} titulo="Escolha o sabor" />
+        <SeletorSabor
+          saborId={batida.sabor.id}
+          tamanho={batida.tamanho}
+          onSelecionar={batida.escolherSabor}
+        />
+      </RevealOnScroll>
+    </>
+  );
+
+  const batidaPronta = batida.tamanho !== null;
+
+  const bandBatida = (
+    <>
+      {batidaPronta ? (
+        <>
+          <ResumoBatida
+            sabor={batida.sabor}
+            tamanho={batida.tamanho}
+            preco={batida.preco}
+            formaPagamento={batida.formaPagamento}
+            onFormaPagamento={batida.escolherFormaPagamento}
+            onLimpar={batida.limpar}
+          />
+          <BotaoPedidoBatida
+            sabor={batida.sabor}
+            tamanho={batida.tamanho}
+            preco={batida.preco}
+            formaPagamento={batida.formaPagamento}
+          />
+        </>
+      ) : (
+        <div className="flex flex-col items-center gap-3 py-8 text-center text-white/60">
+          <p className="text-sm font-medium leading-relaxed">
+            Escolha o tamanho e o sabor acima
+            <br />
+            para montar sua batida
+          </p>
+        </div>
+      )}
+    </>
+  );
+
+  const emBatida = modo === 'batida';
+
   return (
     <CardapioTemplate
       hero={HERO_VIDEO ? <HeroVideo src={HERO_VIDEO} /> : undefined}
-      topo={topo}
-      band={band}
+      topo={
+        <>
+          {seletorModo}
+          {emBatida ? topoBatida : topo}
+        </>
+      }
+      band={
+        <>
+          {emBatida ? bandBatida : band}
+          {rodape}
+        </>
+      }
     />
   );
 }

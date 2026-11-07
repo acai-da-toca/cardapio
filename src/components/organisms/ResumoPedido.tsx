@@ -1,13 +1,15 @@
 import { COPO_TRUFADO, formatarPreco } from '../../data/menu';
 import type { ResumoPedido as Resumo } from '../../hooks/usePedido';
+import { SeletorPagamento } from '../molecules/SeletorPagamento';
 
 interface Props {
   resumo: Resumo;
   onLimpar: () => void;
+  onFormaPagamento: (id: string) => void;
 }
 
 /** Organismo: resumo do pedido com total em tempo real. */
-export function ResumoPedido({ resumo, onLimpar }: Props) {
+export function ResumoPedido({ resumo, onLimpar, onFormaPagamento }: Props) {
   const { tamanho } = resumo;
   if (!tamanho) return null;
 
@@ -39,10 +41,20 @@ export function ResumoPedido({ resumo, onLimpar }: Props) {
           {resumo.acompanhamentos.join(', ')}
         </Linha>
       )}
+      {resumo.sorvetes.length > 0 && (
+        <Linha label="Sorvetes (valor a confirmar)">
+          {resumo.sorvetes.join(', ')}
+        </Linha>
+      )}
+      {resumo.adicionais.length > 0 && (
+        <Linha label="Adicionais (valor a confirmar)">
+          {resumo.adicionais.join(', ')}
+        </Linha>
+      )}
       {nomeTrufado && <Linha label="Trufado">{nomeTrufado}</Linha>}
 
       {resumo.valorExtras > 0 && (
-        <Linha label={`Adicionais (${resumo.totalExtrasItens} item)`}>
+        <Linha label={`Itens extras (${resumo.totalExtrasItens} item)`}>
           {formatarPreco(resumo.valorExtras)}
         </Linha>
       )}
@@ -54,6 +66,16 @@ export function ResumoPedido({ resumo, onLimpar }: Props) {
         <span>Total</span>
         <span className="text-2xl text-amber">{formatarPreco(resumo.total)}</span>
       </div>
+      {resumo.temItemAConfirmar && (
+        <p className="mt-1 text-xs text-white/60">
+          Sorvetes e adicionais ainda não têm preço definido — a loja confirma o valor pelo WhatsApp.
+        </p>
+      )}
+
+      <SeletorPagamento
+        selecionado={resumo.formaPagamento}
+        onSelecionar={onFormaPagamento}
+      />
 
       <button
         type="button"

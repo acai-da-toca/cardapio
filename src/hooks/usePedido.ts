@@ -10,7 +10,10 @@ export interface ResumoPedido {
   frutas: string[];
   coberturas: string[];
   acompanhamentos: string[];
+  sorvetes: string[];
+  adicionais: string[];
   trufado: string | null;
+  formaPagamento: string | null;
   // extras acima do limite incluso
   frutasExtras: number;
   coberturasExtras: number;
@@ -19,6 +22,8 @@ export interface ResumoPedido {
   valorExtras: number;
   valorTrufado: number;
   total: number;
+  // sorvetes/adicionais ainda não têm preço definido — true quando algum foi escolhido
+  temItemAConfirmar: boolean;
 }
 
 export function usePedido() {
@@ -26,7 +31,10 @@ export function usePedido() {
   const [frutas, setFrutas] = useState<string[]>([]);
   const [coberturas, setCoberturas] = useState<string[]>([]);
   const [acompanhamentos, setAcompanhamentos] = useState<string[]>([]);
+  const [sorvetes, setSorvetes] = useState<string[]>([]);
+  const [adicionais, setAdicionais] = useState<string[]>([]);
   const [trufado, setTrufado] = useState<string | null>(null);
+  const [formaPagamento, setFormaPagamento] = useState<string | null>(null);
 
   function toggle(
     valor: string,
@@ -44,6 +52,8 @@ export function usePedido() {
   const toggleCobertura = (v: string) => toggle(v, coberturas, setCoberturas);
   const toggleAcompanhamento = (v: string) =>
     toggle(v, acompanhamentos, setAcompanhamentos);
+  const toggleSorvete = (v: string) => toggle(v, sorvetes, setSorvetes);
+  const toggleAdicional = (v: string) => toggle(v, adicionais, setAdicionais);
 
   function escolherTamanho(novo: TamanhoAcai) {
     // Ao trocar de tamanho, mantém escolhas mas recalcula extras automaticamente.
@@ -55,7 +65,10 @@ export function usePedido() {
     setFrutas([]);
     setCoberturas([]);
     setAcompanhamentos([]);
+    setSorvetes([]);
+    setAdicionais([]);
     setTrufado(null);
+    setFormaPagamento(null);
   }
 
   const resumo: ResumoPedido = useMemo(() => {
@@ -80,7 +93,10 @@ export function usePedido() {
       frutas,
       coberturas,
       acompanhamentos,
+      sorvetes,
+      adicionais,
       trufado,
+      formaPagamento,
       frutasExtras,
       coberturasExtras,
       acompanhamentosExtras,
@@ -88,20 +104,36 @@ export function usePedido() {
       valorExtras,
       valorTrufado,
       total: base + valorExtras + valorTrufado,
+      temItemAConfirmar: sorvetes.length > 0 || adicionais.length > 0,
     };
-  }, [tamanho, frutas, coberturas, acompanhamentos, trufado]);
+  }, [
+    tamanho,
+    frutas,
+    coberturas,
+    acompanhamentos,
+    sorvetes,
+    adicionais,
+    trufado,
+    formaPagamento,
+  ]);
 
   return {
     tamanho,
     frutas,
     coberturas,
     acompanhamentos,
+    sorvetes,
+    adicionais,
     trufado,
+    formaPagamento,
     setTrufado,
+    escolherFormaPagamento: setFormaPagamento,
     escolherTamanho,
     toggleFruta,
     toggleCobertura,
     toggleAcompanhamento,
+    toggleSorvete,
+    toggleAdicional,
     limpar,
     resumo,
   };
