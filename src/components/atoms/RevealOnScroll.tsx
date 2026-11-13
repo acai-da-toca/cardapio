@@ -9,17 +9,18 @@ interface Props {
 }
 
 /**
- * Átomo utilitário: revela o conteúdo ao entrar na viewport (cai suavemente de
- * cima). Dispara UMA vez — boa prática: guia o olhar sem virar loop/distração.
- * Respeita reduced-motion (Framer Motion desativa sozinho quando o usuário pede).
+ * Átomo utilitário: anima o conteúdo surgindo suavemente de cima ao montar.
+ * Dispara ao carregar a página, sem depender de IntersectionObserver — em
+ * navegadores embutidos (WebView do Instagram, WhatsApp etc.) o scroll-reveal
+ * via whileInView pode nunca disparar, deixando o conteúdo em opacidade 0
+ * para sempre. Respeita reduced-motion (Framer Motion desativa sozinho).
  */
 export function RevealOnScroll({ children, delay = 0, className }: Props) {
   return (
     <motion.div
       className={className}
       initial={{ opacity: 0, y: 24 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.2 }}
+      animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.45, delay, ease: [0.22, 1, 0.36, 1] }}
     >
       {children}
