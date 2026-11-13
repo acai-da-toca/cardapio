@@ -24,10 +24,10 @@ export interface OpcaoTrufado {
 }
 
 export const TAMANHOS: TamanhoAcai[] = [
-  { id: '330', volume: '330ml', preco: 16.0, coberturas: 1, acompanhamentos: 2, frutas: 1 },
-  { id: '440', volume: '440ml', preco: 19.0, coberturas: 1, acompanhamentos: 2, frutas: 2 },
-  { id: '550', volume: '550ml', preco: 23.0, coberturas: 2, acompanhamentos: 4, frutas: 2 },
-  { id: '770', volume: '770ml', preco: 35.0, coberturas: 2, acompanhamentos: 4, frutas: 3 },
+  { id: '330', volume: '330ml', preco: 16.0, coberturas: 1, acompanhamentos: 4, frutas: 1 },
+  { id: '440', volume: '440ml', preco: 19.0, coberturas: 1, acompanhamentos: 5, frutas: 2 },
+  { id: '550', volume: '550ml', preco: 23.0, coberturas: 2, acompanhamentos: 6, frutas: 2 },
+  { id: '770', volume: '770ml', preco: 35.0, coberturas: 2, acompanhamentos: 7, frutas: 3 },
 ];
 
 export const FRUTAS: string[] = ['Morango', 'Banana', 'Manga', 'Uva'];
