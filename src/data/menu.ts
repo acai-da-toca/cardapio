@@ -24,10 +24,10 @@ export interface OpcaoTrufado {
 }
 
 export const TAMANHOS: TamanhoAcai[] = [
-  { id: '330', volume: '330ml', preco: 15.99, coberturas: 1, acompanhamentos: 2, frutas: 1 },
-  { id: '440', volume: '440ml', preco: 18.99, coberturas: 1, acompanhamentos: 2, frutas: 2 },
-  { id: '550', volume: '550ml', preco: 22.99, coberturas: 2, acompanhamentos: 4, frutas: 2 },
-  { id: '770', volume: '770ml', preco: 34.9, coberturas: 2, acompanhamentos: 4, frutas: 3 },
+  { id: '330', volume: '330ml', preco: 16.0, coberturas: 1, acompanhamentos: 2, frutas: 1 },
+  { id: '440', volume: '440ml', preco: 19.0, coberturas: 1, acompanhamentos: 2, frutas: 2 },
+  { id: '550', volume: '550ml', preco: 23.0, coberturas: 2, acompanhamentos: 4, frutas: 2 },
+  { id: '770', volume: '770ml', preco: 35.0, coberturas: 2, acompanhamentos: 4, frutas: 3 },
 ];
 
 export const FRUTAS: string[] = ['Morango', 'Banana', 'Manga', 'Uva'];
@@ -90,6 +90,7 @@ export const COPO_TRUFADO: OpcaoTrufado[] = [
 export const PRECO_ADICIONAL_ITEM = 3.0; // adicional por item extra (fruta/cobertura/acomp.)
 export const PRECO_TRUFADO = 5.0; // adicional do copo trufado
 export const PRECO_MOUSSE = 3.0; // cada mousse (adicional)
+export const PRECO_ACAI_ZERO = 5.0; // adicional do açaí zero
 
 export function formatarPreco(valor: number): string {
   return valor.toLocaleString('pt-BR', {

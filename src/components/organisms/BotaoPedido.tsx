@@ -29,6 +29,7 @@ function montarMensagem(r: Resumo, produto: string): string {
     );
   const trufado = COPO_TRUFADO.find((t) => t.id === r.trufado)?.nome;
   if (trufado) linhas.push(`🍯 Trufado: ${trufado}`);
+  if (r.acaiZero) linhas.push(`0️⃣ Açaí Zero: ${formatarPreco(r.valorAcaiZero)}`);
   linhas.push('', `💰 Total: ${formatarPreco(r.total)}`);
   const pagamento = FORMAS_PAGAMENTO.find((f) => f.id === r.formaPagamento)?.nome;
   if (pagamento) linhas.push(`💳 Pagamento: ${pagamento}`);

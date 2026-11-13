@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import {
+  PRECO_ACAI_ZERO,
   PRECO_ADICIONAL_ITEM,
   PRECO_MOUSSE,
   PRECO_TRUFADO,
@@ -15,6 +16,7 @@ export interface ResumoPedido {
   valorSorvete: number | null;
   adicionais: string[];
   trufado: string | null;
+  acaiZero: boolean;
   formaPagamento: string | null;
   // extras acima do limite incluso
   frutasExtras: number;
@@ -24,6 +26,7 @@ export interface ResumoPedido {
   valorExtras: number;
   valorTrufado: number;
   valorAdicionais: number;
+  valorAcaiZero: number;
   total: number;
   // sorvete foi escolhido mas o cliente ainda não disse quanto quer gastar
   sorveteSemValor: boolean;
@@ -38,6 +41,7 @@ export function usePedido() {
   const [valorSorvete, setValorSorvete] = useState<number | null>(null);
   const [adicionais, setAdicionais] = useState<string[]>([]);
   const [trufado, setTrufado] = useState<string | null>(null);
+  const [acaiZero, setAcaiZero] = useState(false);
   const [formaPagamento, setFormaPagamento] = useState<string | null>(null);
 
   function toggle(
@@ -73,6 +77,7 @@ export function usePedido() {
     setValorSorvete(null);
     setAdicionais([]);
     setTrufado(null);
+    setAcaiZero(false);
     setFormaPagamento(null);
   }
 
@@ -92,6 +97,7 @@ export function usePedido() {
     const valorExtras = totalExtrasItens * PRECO_ADICIONAL_ITEM;
     const valorTrufado = trufado ? PRECO_TRUFADO : 0;
     const valorAdicionais = adicionais.length * PRECO_MOUSSE;
+    const valorAcaiZero = acaiZero ? PRECO_ACAI_ZERO : 0;
     const base = tamanho?.preco ?? 0;
 
     return {
@@ -103,6 +109,7 @@ export function usePedido() {
       valorSorvete,
       adicionais,
       trufado,
+      acaiZero,
       formaPagamento,
       frutasExtras,
       coberturasExtras,
@@ -111,7 +118,14 @@ export function usePedido() {
       valorExtras,
       valorTrufado,
       valorAdicionais,
-      total: base + valorExtras + valorTrufado + valorAdicionais + (valorSorvete ?? 0),
+      valorAcaiZero,
+      total:
+        base +
+        valorExtras +
+        valorTrufado +
+        valorAdicionais +
+        valorAcaiZero +
+        (valorSorvete ?? 0),
       sorveteSemValor: sorvetes.length > 0 && !valorSorvete,
     };
   }, [
@@ -123,6 +137,7 @@ export function usePedido() {
     valorSorvete,
     adicionais,
     trufado,
+    acaiZero,
     formaPagamento,
   ]);
 
@@ -135,8 +150,10 @@ export function usePedido() {
     valorSorvete,
     adicionais,
     trufado,
+    acaiZero,
     formaPagamento,
     setTrufado,
+    setAcaiZero,
     setValorSorvete,
     escolherFormaPagamento: setFormaPagamento,
     escolherTamanho,
