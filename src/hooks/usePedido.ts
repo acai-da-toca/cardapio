@@ -16,7 +16,7 @@ export interface ResumoPedido {
   valorSorvete: number | null;
   adicionais: string[];
   trufado: string | null;
-  acaiZero: boolean;
+  acaiZeroQtd: number;
   formaPagamento: string | null;
   // extras acima do limite incluso
   frutasExtras: number;
@@ -41,7 +41,7 @@ export function usePedido() {
   const [valorSorvete, setValorSorvete] = useState<number | null>(null);
   const [adicionais, setAdicionais] = useState<string[]>([]);
   const [trufado, setTrufado] = useState<string | null>(null);
-  const [acaiZero, setAcaiZero] = useState(false);
+  const [acaiZeroQtd, setAcaiZeroQtd] = useState(0);
   const [formaPagamento, setFormaPagamento] = useState<string | null>(null);
 
   function toggle(
@@ -77,7 +77,7 @@ export function usePedido() {
     setValorSorvete(null);
     setAdicionais([]);
     setTrufado(null);
-    setAcaiZero(false);
+    setAcaiZeroQtd(0);
     setFormaPagamento(null);
   }
 
@@ -97,7 +97,7 @@ export function usePedido() {
     const valorExtras = totalExtrasItens * PRECO_ADICIONAL_ITEM;
     const valorTrufado = trufado ? PRECO_TRUFADO : 0;
     const valorAdicionais = adicionais.length * PRECO_MOUSSE;
-    const valorAcaiZero = acaiZero ? PRECO_ACAI_ZERO : 0;
+    const valorAcaiZero = acaiZeroQtd * PRECO_ACAI_ZERO;
     const base = tamanho?.preco ?? 0;
 
     return {
@@ -109,7 +109,7 @@ export function usePedido() {
       valorSorvete,
       adicionais,
       trufado,
-      acaiZero,
+      acaiZeroQtd,
       formaPagamento,
       frutasExtras,
       coberturasExtras,
@@ -137,7 +137,7 @@ export function usePedido() {
     valorSorvete,
     adicionais,
     trufado,
-    acaiZero,
+    acaiZeroQtd,
     formaPagamento,
   ]);
 
@@ -150,10 +150,10 @@ export function usePedido() {
     valorSorvete,
     adicionais,
     trufado,
-    acaiZero,
+    acaiZeroQtd,
     formaPagamento,
     setTrufado,
-    setAcaiZero,
+    setAcaiZeroQtd,
     setValorSorvete,
     escolherFormaPagamento: setFormaPagamento,
     escolherTamanho,

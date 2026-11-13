@@ -9,13 +9,18 @@ import {
 interface Props {
   trufado: string | null;
   onTrufado: (id: string | null) => void;
-  /** Quando ausente, o cartão de Açaí Zero não aparece (ex.: fluxo do sorvete). */
-  acaiZero?: boolean;
-  onAcaiZero?: (v: boolean) => void;
+  /** Quando ausente, o cartão de Açaí Zero não aparece. */
+  acaiZeroQtd?: number;
+  onAcaiZeroQtd?: (qtd: number) => void;
 }
 
 /** Organismo: cards de adicionais (item extra + copo trufado + açaí zero). */
-export function Extras({ trufado, onTrufado, acaiZero, onAcaiZero }: Props) {
+export function Extras({
+  trufado,
+  onTrufado,
+  acaiZeroQtd,
+  onAcaiZeroQtd,
+}: Props) {
   return (
     <div className="mt-6 flex flex-col gap-3">
       <div className="rounded-xl bg-amber px-5 py-4 text-deep">
@@ -66,13 +71,10 @@ export function Extras({ trufado, onTrufado, acaiZero, onAcaiZero }: Props) {
         </div>
       </div>
 
-      {onAcaiZero && (
-        <button
-          type="button"
-          aria-pressed={acaiZero}
-          onClick={() => onAcaiZero(!acaiZero)}
-          className={`rounded-xl px-5 py-4 text-left text-white transition-colors ${
-            acaiZero ? 'bg-magenta ring-2 ring-amber' : 'bg-magenta/70'
+      {onAcaiZeroQtd && (
+        <div
+          className={`rounded-xl px-5 py-4 text-white transition-colors ${
+            acaiZeroQtd && acaiZeroQtd > 0 ? 'bg-magenta ring-2 ring-amber' : 'bg-magenta/70'
           }`}
         >
           <div className="flex items-center justify-between gap-4">
@@ -81,14 +83,32 @@ export function Extras({ trufado, onTrufado, acaiZero, onAcaiZero }: Props) {
                 Açaí Zero
               </div>
               <div className="mt-0.5 text-xs opacity-90">
-                {acaiZero ? 'Adicionado' : 'Toque para adicionar'}
+                {formatarPreco(PRECO_ACAI_ZERO)} cada
               </div>
             </div>
-            <div className="whitespace-nowrap text-2xl font-bold leading-none">
-              +{formatarPreco(PRECO_ACAI_ZERO)}
+            <div className="flex flex-none items-center gap-3">
+              <button
+                type="button"
+                aria-label="Diminuir quantidade de Açaí Zero"
+                onClick={() => onAcaiZeroQtd(Math.max(0, (acaiZeroQtd ?? 0) - 1))}
+                className="flex size-8 items-center justify-center rounded-full bg-white/20 text-lg font-bold leading-none transition-colors hover:bg-white/30"
+              >
+                −
+              </button>
+              <span className="w-4 text-center text-lg font-bold">
+                {acaiZeroQtd ?? 0}
+              </span>
+              <button
+                type="button"
+                aria-label="Aumentar quantidade de Açaí Zero"
+                onClick={() => onAcaiZeroQtd((acaiZeroQtd ?? 0) + 1)}
+                className="flex size-8 items-center justify-center rounded-full bg-white/20 text-lg font-bold leading-none transition-colors hover:bg-white/30"
+              >
+                +
+              </button>
             </div>
           </div>
-        </button>
+        </div>
       )}
     </div>
   );

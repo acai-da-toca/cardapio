@@ -72,8 +72,10 @@ export function ResumoPedido({
       {resumo.valorTrufado > 0 && (
         <Linha label="Copo trufado">{formatarPreco(resumo.valorTrufado)}</Linha>
       )}
-      {resumo.acaiZero && (
-        <Linha label="Açaí Zero">{formatarPreco(resumo.valorAcaiZero)}</Linha>
+      {resumo.acaiZeroQtd > 0 && (
+        <Linha label={`Açaí Zero (${resumo.acaiZeroQtd}x)`}>
+          {formatarPreco(resumo.valorAcaiZero)}
+        </Linha>
       )}
 
       <div className="mt-3 flex items-center justify-between border-t border-white/35 pt-3 text-lg font-bold">
