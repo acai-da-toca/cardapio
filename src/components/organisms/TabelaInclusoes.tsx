@@ -10,10 +10,6 @@ interface Props {
   tamanhos?: TamanhoAcai[];
 }
 
-function plural(n: number | null, singular: string, pluralForm: string) {
-  return n !== null && n > 1 ? pluralForm : singular;
-}
-
 const container = {
   hidden: {},
   show: { transition: { staggerChildren: 0.07 } },
@@ -23,7 +19,11 @@ const item = {
   show: { opacity: 1, x: 0 },
 };
 
-/** Organismo: tabela do que vem em cada tamanho (linhas selecionáveis). */
+/**
+ * Organismo: tabela do que vem em cada tamanho (linhas selecionáveis).
+ * Frutas e coberturas contam dentro da cota de acompanhamentos, não são
+ * limites à parte — por isso só mostra um número por tamanho.
+ */
 export function TabelaInclusoes({
   selecionado,
   onSelecionar,
@@ -71,7 +71,7 @@ function LinhaTamanho({
       whileTap={{ scale: 0.97 }}
       whileHover={{ scale: 1.01 }}
       transition={{ type: 'spring', stiffness: 400, damping: 26 }}
-      className={`relative grid w-full scale-100 grid-cols-[72px_repeat(3,1fr)] items-center overflow-hidden rounded-xl border-2 px-4 py-3 text-left text-white transition-transform duration-200 ${
+      className={`relative flex w-full scale-100 items-center justify-between gap-4 overflow-hidden rounded-xl border-2 px-4 py-3 text-left text-white transition-transform duration-200 ${
         ativo
           ? 'scale-[1.02] border-amber bg-gradient-to-br from-magenta to-deep shadow-[0_0_0_3px_rgba(253,183,91,.55)]'
           : 'border-transparent bg-gradient-to-br from-purple to-deep'
@@ -79,26 +79,12 @@ function LinhaTamanho({
     >
       <CherrySplash pontos={pontos} camada="front" />
       <div className="relative z-[1] text-lg font-bold">{t.volume}</div>
-      <Stat
-        n={t.coberturas}
-        label={t.coberturas === null ? 'livre' : plural(t.coberturas, 'cobertura', 'coberturas')}
-      />
-      <Stat n={t.acompanhamentos} label="acomp." />
-      <Stat
-        n={t.frutas}
-        label={t.frutas === null ? 'livre' : plural(t.frutas, 'fruta', 'frutas')}
-      />
-    </motion.button>
-  );
-}
-
-function Stat({ n, label }: { n: number | null; label: string }) {
-  return (
-    <div className="relative z-[1] flex flex-col items-center gap-0.5 border-l border-white/15 py-1">
-      <div className="text-2xl font-bold leading-tight text-amber">
-        {n === null ? '∞' : n}
+      <div className="relative z-[1] flex items-baseline gap-1.5">
+        <span className="text-2xl font-bold leading-tight text-amber">
+          {t.acompanhamentos}
+        </span>
+        <span className="text-xs text-white/90">acompanhamentos</span>
       </div>
-      <div className="text-xs text-white/90">{label}</div>
-    </div>
+    </motion.button>
   );
 }
