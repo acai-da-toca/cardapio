@@ -70,11 +70,10 @@ function LinhaTamanho({
       variants={item}
       whileTap={{ scale: 0.97 }}
       whileHover={{ scale: 1.01 }}
-      animate={{ scale: ativo ? 1.02 : 1 }}
       transition={{ type: 'spring', stiffness: 400, damping: 26 }}
-      className={`relative grid w-full grid-cols-[72px_repeat(3,1fr)] items-center overflow-hidden rounded-xl border-2 px-4 py-3 text-left text-white ${
+      className={`relative grid w-full scale-100 grid-cols-[72px_repeat(3,1fr)] items-center overflow-hidden rounded-xl border-2 px-4 py-3 text-left text-white transition-transform duration-200 ${
         ativo
-          ? 'border-amber bg-gradient-to-br from-magenta to-deep shadow-[0_0_0_3px_rgba(253,183,91,.55)]'
+          ? 'scale-[1.02] border-amber bg-gradient-to-br from-magenta to-deep shadow-[0_0_0_3px_rgba(253,183,91,.55)]'
           : 'border-transparent bg-gradient-to-br from-purple to-deep'
       }`}
     >
