@@ -34,8 +34,7 @@ export function TabelaInclusoes({
       className="flex flex-col gap-2"
       variants={container}
       initial="hidden"
-      whileInView="show"
-      viewport={{ once: true, amount: 0.2 }}
+      animate="show"
     >
       {tamanhos.map((t) => (
         <LinhaTamanho

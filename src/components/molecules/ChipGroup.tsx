@@ -55,8 +55,7 @@ export function ChipGroup({
         className="flex flex-wrap gap-2"
         variants={container}
         initial="hidden"
-        whileInView="show"
-        viewport={{ once: true, amount: 0.3 }}
+        animate="show"
       >
         {opcoes.map((opcao) => (
           <motion.div key={opcao} variants={item}>
