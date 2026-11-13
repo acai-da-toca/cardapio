@@ -135,8 +135,8 @@ function montarFluxoEstiloAcai(
         <Extras
           trufado={p.trufado}
           onTrufado={p.setTrufado}
-          acaiZero={produto === 'açaí' ? p.acaiZero : undefined}
-          onAcaiZero={produto === 'açaí' ? p.setAcaiZero : undefined}
+          acaiZero={p.acaiZero}
+          onAcaiZero={p.setAcaiZero}
         />
       </RevealOnScroll>
 
