@@ -10,8 +10,8 @@ interface Props {
   tamanhos?: TamanhoAcai[];
 }
 
-function plural(n: number, singular: string, pluralForm: string) {
-  return n > 1 ? pluralForm : singular;
+function plural(n: number | null, singular: string, pluralForm: string) {
+  return n !== null && n > 1 ? pluralForm : singular;
 }
 
 const container = {
@@ -81,17 +81,25 @@ function LinhaTamanho({
     >
       <CherrySplash pontos={pontos} camada="front" />
       <div className="relative z-[1] text-lg font-bold">{t.volume}</div>
-      <Stat n={t.coberturas} label={plural(t.coberturas, 'cobertura', 'coberturas')} />
+      <Stat
+        n={t.coberturas}
+        label={t.coberturas === null ? 'livre' : plural(t.coberturas, 'cobertura', 'coberturas')}
+      />
       <Stat n={t.acompanhamentos} label="acomp." />
-      <Stat n={t.frutas} label={plural(t.frutas, 'fruta', 'frutas')} />
+      <Stat
+        n={t.frutas}
+        label={t.frutas === null ? 'livre' : plural(t.frutas, 'fruta', 'frutas')}
+      />
     </motion.button>
   );
 }
 
-function Stat({ n, label }: { n: number; label: string }) {
+function Stat({ n, label }: { n: number | null; label: string }) {
   return (
     <div className="relative z-[1] flex flex-col items-center gap-0.5 border-l border-white/15 py-1">
-      <div className="text-2xl font-bold leading-tight text-amber">{n}</div>
+      <div className="text-2xl font-bold leading-tight text-amber">
+        {n === null ? '∞' : n}
+      </div>
       <div className="text-xs text-white/90">{label}</div>
     </div>
   );

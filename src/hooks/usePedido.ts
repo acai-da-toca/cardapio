@@ -82,12 +82,14 @@ export function usePedido() {
   }
 
   const resumo: ResumoPedido = useMemo(() => {
-    const frutasExtras = tamanho
-      ? Math.max(0, frutas.length - tamanho.frutas)
-      : 0;
-    const coberturasExtras = tamanho
-      ? Math.max(0, coberturas.length - tamanho.coberturas)
-      : 0;
+    const frutasExtras =
+      tamanho && tamanho.frutas !== null
+        ? Math.max(0, frutas.length - tamanho.frutas)
+        : 0;
+    const coberturasExtras =
+      tamanho && tamanho.coberturas !== null
+        ? Math.max(0, coberturas.length - tamanho.coberturas)
+        : 0;
     const acompanhamentosExtras = tamanho
       ? Math.max(0, acompanhamentos.length - tamanho.acompanhamentos)
       : 0;
