@@ -1,6 +1,6 @@
 import { BATIDA_IMG, SABORES_BATIDA, TAMANHOS_BATIDA } from '../../data/batidas';
 import { formatarPreco } from '../../data/menu';
-import { GarrafaFoto } from '../atoms/GarrafaFoto';
+import { FotoProduto } from '../atoms/FotoProduto';
 import { Pill } from '../atoms/Pill';
 
 interface Props {
@@ -27,7 +27,7 @@ export function SeletorTamanhoBatida({ tamanhoId, onSelecionar }: Props) {
     <div className="flex flex-col gap-2">
       <div className="grid grid-cols-[minmax(120px,40%)_1fr] items-center gap-4 sm:gap-5">
         {BATIDA_IMG && (
-          <GarrafaFoto
+          <FotoProduto
             src={BATIDA_IMG}
             volume={destaque.volume}
             preco={formatarPreco(precoMinimo(destaque.id))}

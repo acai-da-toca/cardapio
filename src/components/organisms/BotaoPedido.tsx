@@ -5,12 +5,14 @@ import type { ResumoPedido as Resumo } from '../../hooks/usePedido';
 
 interface Props {
   resumo: Resumo;
+  /** Nome do produto na mensagem e na barra (ex.: "açaí", "sorvete"). Padrão: "açaí". */
+  produto?: string;
 }
 
 /** Monta a mensagem de pedido em texto a partir do resumo. */
-function montarMensagem(r: Resumo): string {
+function montarMensagem(r: Resumo, produto: string): string {
   if (!r.tamanho) return '';
-  const linhas: string[] = ['Olá! Quero montar meu açaí 🍨', ''];
+  const linhas: string[] = [`Olá! Quero montar meu ${produto} 🍨`, ''];
   linhas.push(`🥤 Tamanho: ${r.tamanho.volume} (${formatarPreco(r.tamanho.preco)})`);
   if (r.frutas.length) linhas.push(`🍓 Frutas: ${r.frutas.join(', ')}`);
   if (r.coberturas.length) linhas.push(`🍫 Coberturas: ${r.coberturas.join(', ')}`);
@@ -39,10 +41,10 @@ function montarMensagem(r: Resumo): string {
  * escolhe o tamanho e a forma de pagamento, transformando "ver o cardápio"
  * em "fazer o pedido".
  */
-export function BotaoPedido({ resumo }: Props) {
+export function BotaoPedido({ resumo, produto = 'açaí' }: Props) {
   if (!resumo.tamanho || !resumo.formaPagamento) return null;
 
-  const mensagem = montarMensagem(resumo);
+  const mensagem = montarMensagem(resumo, produto);
   const href = WHATSAPP
     ? `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(mensagem)}`
     : undefined;
@@ -51,7 +53,7 @@ export function BotaoPedido({ resumo }: Props) {
     <>
       <span className="flex min-w-0 flex-col text-left leading-tight">
         <span className="truncate text-xs uppercase tracking-wider opacity-90">
-          Seu açaí {resumo.tamanho.volume}
+          Seu {produto} {resumo.tamanho.volume}
         </span>
         <span className="text-xl font-bold">{formatarPreco(resumo.total)}</span>
       </span>

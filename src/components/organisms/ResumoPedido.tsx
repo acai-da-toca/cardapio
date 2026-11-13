@@ -6,10 +6,17 @@ interface Props {
   resumo: Resumo;
   onLimpar: () => void;
   onFormaPagamento: (id: string) => void;
+  /** Nome do produto no resumo (ex.: "açaí", "sorvete"). Padrão: "açaí". */
+  produto?: string;
 }
 
 /** Organismo: resumo do pedido com total em tempo real. */
-export function ResumoPedido({ resumo, onLimpar, onFormaPagamento }: Props) {
+export function ResumoPedido({
+  resumo,
+  onLimpar,
+  onFormaPagamento,
+  produto = 'açaí',
+}: Props) {
   const { tamanho } = resumo;
   if (!tamanho) return null;
 
@@ -18,7 +25,7 @@ export function ResumoPedido({ resumo, onLimpar, onFormaPagamento }: Props) {
   return (
     <div className="mt-5 rounded-xl border border-white/30 bg-white/10 px-5 py-4 text-white">
       <div className="mb-2 text-xs font-bold uppercase tracking-[0.14em]">
-        Seu açaí
+        Seu {produto}
       </div>
 
       <Linha label="Tamanho">
@@ -64,7 +71,7 @@ export function ResumoPedido({ resumo, onLimpar, onFormaPagamento }: Props) {
       )}
 
       <div className="mt-3 flex items-center justify-between border-t border-white/35 pt-3 text-lg font-bold">
-        <span>{resumo.temItemAConfirmar ? 'Total do açaí' : 'Total'}</span>
+        <span>{resumo.temItemAConfirmar ? `Total do ${produto}` : 'Total'}</span>
         <span className="text-2xl text-amber">{formatarPreco(resumo.total)}</span>
       </div>
       {resumo.temItemAConfirmar && (

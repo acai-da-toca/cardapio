@@ -11,6 +11,7 @@ import { ResumoBatida } from './components/organisms/ResumoBatida';
 import { SeletorModo, type ModoPedido } from './components/organisms/SeletorModo';
 import { SeletorSabor } from './components/organisms/SeletorSabor';
 import { SeletorTamanhoBatida } from './components/organisms/SeletorTamanhoBatida';
+import { SeletorTamanhoSorvete } from './components/organisms/SeletorTamanhoSorvete';
 import { Extras } from './components/organisms/Extras';
 import { HeroVideo } from './components/organisms/HeroVideo';
 import { ResumoPedido } from './components/organisms/ResumoPedido';
@@ -23,32 +24,31 @@ import { ACOMPANHAMENTOS, ADICIONAIS, COBERTURAS, FRUTAS, SORVETES } from './dat
 import { usePedido } from './hooks/usePedido';
 import { usePedidoBatida } from './hooks/usePedidoBatida';
 
-/** Página: cardápio "Monte seu Açaí" com conteúdo real. */
-export default function App() {
-  const pedido = usePedido();
-  const { tamanho } = pedido;
-
-  // Segunda opção: batida de açaí. Cada fluxo tem o próprio estado, então ao
-  // alternar entre eles nada do que o cliente já escolheu se perde.
-  const [modo, setModo] = useState<ModoPedido>('copo');
-  const batida = usePedidoBatida();
+/**
+ * Monta o fluxo "tamanho + monte do seu jeito" usado pelo açaí e pelo
+ * sorvete — mesmas categorias e regras, só troca o estado e o nome do
+ * produto nos textos (resumo e mensagem do WhatsApp).
+ */
+function montarFluxoEstiloAcai(
+  p: ReturnType<typeof usePedido>,
+  produto: string,
+  SeletorDeTamanho: (props: {
+    selecionado: ReturnType<typeof usePedido>['tamanho'];
+    onSelecionar: ReturnType<typeof usePedido>['escolherTamanho'];
+  }) => React.ReactElement,
+) {
+  const { tamanho } = p;
 
   const topo = (
     <>
       <RevealOnScroll>
         <SectionHeading numero={1} titulo="Escolha o tamanho" />
-        <SeletorTamanho
-          selecionado={tamanho}
-          onSelecionar={pedido.escolherTamanho}
-        />
+        <SeletorDeTamanho selecionado={tamanho} onSelecionar={p.escolherTamanho} />
       </RevealOnScroll>
 
       <RevealOnScroll delay={0.05}>
         <SectionHeading numero={2} titulo="Escolha os acompanhamentos" />
-        <TabelaInclusoes
-          selecionado={tamanho}
-          onSelecionar={pedido.escolherTamanho}
-        />
+        <TabelaInclusoes selecionado={tamanho} onSelecionar={p.escolherTamanho} />
       </RevealOnScroll>
     </>
   );
@@ -70,46 +70,46 @@ export default function App() {
         titulo="Frutas"
         cor="fruta"
         opcoes={FRUTAS}
-        selecionados={pedido.frutas}
+        selecionados={p.frutas}
         incluso={tamanho?.frutas ?? null}
-        onToggle={pedido.toggleFruta}
+        onToggle={p.toggleFruta}
       />
       <ChipGroup
         titulo="Coberturas"
         cor="cobertura"
         opcoes={COBERTURAS}
-        selecionados={pedido.coberturas}
+        selecionados={p.coberturas}
         incluso={tamanho?.coberturas ?? null}
-        onToggle={pedido.toggleCobertura}
+        onToggle={p.toggleCobertura}
       />
       <ChipGroup
         titulo="Acompanhamentos"
         cor="acompanhamento"
         opcoes={ACOMPANHAMENTOS}
-        selecionados={pedido.acompanhamentos}
+        selecionados={p.acompanhamentos}
         incluso={tamanho?.acompanhamentos ?? null}
-        onToggle={pedido.toggleAcompanhamento}
+        onToggle={p.toggleAcompanhamento}
       />
       <ChipGroup
         titulo="Sorvetes"
         cor="sorvete"
         opcoes={SORVETES}
-        selecionados={pedido.sorvetes}
+        selecionados={p.sorvetes}
         incluso={null}
-        onToggle={pedido.toggleSorvete}
+        onToggle={p.toggleSorvete}
       />
-      {pedido.sorvetes.length > 0 && (
+      {p.sorvetes.length > 0 && (
         <div className="-mt-3 mb-5">
           <label
-            htmlFor="observacao-sorvete"
+            htmlFor={`observacao-sorvete-${produto}`}
             className="mb-1.5 block text-xs text-white/70"
           >
             Sorvete é vendido por peso. Quer dizer quanto ou algo específico?
           </label>
           <CampoObservacao
-            id="observacao-sorvete"
-            valor={pedido.observacaoSorvete}
-            onChange={pedido.setObservacaoSorvete}
+            id={`observacao-sorvete-${produto}`}
+            valor={p.observacaoSorvete}
+            onChange={p.setObservacaoSorvete}
             placeholder="Ex.: 300g, metade morango e metade chocolate..."
           />
         </div>
@@ -118,23 +118,45 @@ export default function App() {
         titulo="Adicionais"
         cor="adicional"
         opcoes={ADICIONAIS}
-        selecionados={pedido.adicionais}
+        selecionados={p.adicionais}
         incluso={null}
-        onToggle={pedido.toggleAdicional}
+        onToggle={p.toggleAdicional}
       />
 
       <RevealOnScroll>
-        <Extras trufado={pedido.trufado} onTrufado={pedido.setTrufado} />
+        <Extras trufado={p.trufado} onTrufado={p.setTrufado} />
       </RevealOnScroll>
 
       <ResumoPedido
-        resumo={pedido.resumo}
-        onLimpar={pedido.limpar}
-        onFormaPagamento={pedido.escolherFormaPagamento}
+        resumo={p.resumo}
+        onLimpar={p.limpar}
+        onFormaPagamento={p.escolherFormaPagamento}
+        produto={produto}
       />
 
-      <BotaoPedido resumo={pedido.resumo} />
+      <BotaoPedido resumo={p.resumo} produto={produto} />
     </>
+  );
+
+  return { topo, band };
+}
+
+/** Página: cardápio "Monte seu Açaí" com conteúdo real. */
+export default function App() {
+  const pedido = usePedido();
+
+  // Segunda e terceira opção: batida (garrafinha) e sorvete (self-service).
+  // Cada fluxo tem o próprio estado, então ao alternar entre eles nada do
+  // que o cliente já escolheu se perde.
+  const [modo, setModo] = useState<ModoPedido>('copo');
+  const batida = usePedidoBatida();
+  const sorveteSelfService = usePedido();
+
+  const { topo, band } = montarFluxoEstiloAcai(pedido, 'açaí', SeletorTamanho);
+  const { topo: topoSorvete, band: bandSorvete } = montarFluxoEstiloAcai(
+    sorveteSelfService,
+    'sorvete',
+    SeletorTamanhoSorvete,
   );
 
   // Rodapé compartilhado pelos dois modos (conteúdo idêntico ao de antes).
@@ -235,7 +257,10 @@ export default function App() {
     </>
   );
 
-  const emBatida = modo === 'batida';
+  const topoAtual =
+    modo === 'batida' ? topoBatida : modo === 'sorvete' ? topoSorvete : topo;
+  const bandAtual =
+    modo === 'batida' ? bandBatida : modo === 'sorvete' ? bandSorvete : band;
 
   return (
     <CardapioTemplate
@@ -243,12 +268,12 @@ export default function App() {
       topo={
         <>
           {seletorModo}
-          {emBatida ? topoBatida : topo}
+          {topoAtual}
         </>
       }
       band={
         <>
-          {emBatida ? bandBatida : band}
+          {bandAtual}
           {rodape}
         </>
       }
