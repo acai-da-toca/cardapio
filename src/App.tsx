@@ -28,14 +28,22 @@ import {
   FRUTAS,
   PRECO_SORVETE_KG,
   SORVETES,
+  TAMANHOS,
+  TAMANHOS_SORVETE,
+  type TamanhoAcai,
 } from './data/menu';
 import { usePedido } from './hooks/usePedido';
 import { usePedidoBatida } from './hooks/usePedidoBatida';
 
 /**
  * Monta o fluxo "tamanho + monte do seu jeito" usado pelo açaí e pelo
- * sorvete — mesmas categorias e regras, só troca o estado e o nome do
- * produto nos textos (resumo e mensagem do WhatsApp).
+ * sorvete — mesmas categorias e regras, só troca o estado, a tabela de
+ * tamanhos e o nome do produto nos textos (resumo e mensagem do WhatsApp).
+ *
+ * O grupo "Sorvetes" (bola de sorvete por cima, cobrada por peso) só faz
+ * sentido como extra do açaí — dentro do próprio fluxo do sorvete ele ficava
+ * redundante e confuso ("pedir sorvete dentro do pedido de sorvete"), por
+ * isso só aparece quando mostrarSorveteExtra é true.
  */
 function montarFluxoEstiloAcai(
   p: ReturnType<typeof usePedido>,
@@ -44,6 +52,8 @@ function montarFluxoEstiloAcai(
     selecionado: ReturnType<typeof usePedido>['tamanho'];
     onSelecionar: ReturnType<typeof usePedido>['escolherTamanho'];
   }) => React.ReactElement,
+  tamanhos: TamanhoAcai[],
+  mostrarSorveteExtra: boolean,
 ) {
   const { tamanho } = p;
 
@@ -56,7 +66,11 @@ function montarFluxoEstiloAcai(
 
       <RevealOnScroll delay={0.05}>
         <SectionHeading numero={2} titulo="Escolha os acompanhamentos" />
-        <TabelaInclusoes selecionado={tamanho} onSelecionar={p.escolherTamanho} />
+        <TabelaInclusoes
+          selecionado={tamanho}
+          onSelecionar={p.escolherTamanho}
+          tamanhos={tamanhos}
+        />
       </RevealOnScroll>
     </>
   );
@@ -98,29 +112,33 @@ function montarFluxoEstiloAcai(
         incluso={tamanho?.acompanhamentos ?? null}
         onToggle={p.toggleAcompanhamento}
       />
-      <ChipGroup
-        titulo="Sorvetes"
-        cor="sorvete"
-        opcoes={SORVETES}
-        selecionados={p.sorvetes}
-        incluso={null}
-        onToggle={p.toggleSorvete}
-      />
-      {p.sorvetes.length > 0 && (
-        <div className="-mt-3 mb-5">
-          <label
-            htmlFor={`valor-sorvete-${produto}`}
-            className="mb-1.5 block text-xs text-white/70"
-          >
-            Sorvete {formatarPreco(PRECO_SORVETE_KG)}/kg. Quanto você quer gastar?
-          </label>
-          <CampoValorReais
-            id={`valor-sorvete-${produto}`}
-            valor={p.valorSorvete}
-            onChange={p.setValorSorvete}
-            placeholder="Ex.: 20"
+      {mostrarSorveteExtra && (
+        <>
+          <ChipGroup
+            titulo="Sorvetes"
+            cor="sorvete"
+            opcoes={SORVETES}
+            selecionados={p.sorvetes}
+            incluso={null}
+            onToggle={p.toggleSorvete}
           />
-        </div>
+          {p.sorvetes.length > 0 && (
+            <div className="-mt-3 mb-5">
+              <label
+                htmlFor={`valor-sorvete-${produto}`}
+                className="mb-1.5 block text-xs text-white/70"
+              >
+                Sorvete {formatarPreco(PRECO_SORVETE_KG)}/kg. Quanto você quer gastar?
+              </label>
+              <CampoValorReais
+                id={`valor-sorvete-${produto}`}
+                valor={p.valorSorvete}
+                onChange={p.setValorSorvete}
+                placeholder="Ex.: 20"
+              />
+            </div>
+          )}
+        </>
       )}
       <ChipGroup
         titulo="Adicionais"
@@ -165,11 +183,19 @@ export default function App() {
   const batida = usePedidoBatida();
   const sorveteSelfService = usePedido();
 
-  const { topo, band } = montarFluxoEstiloAcai(pedido, 'açaí', SeletorTamanho);
+  const { topo, band } = montarFluxoEstiloAcai(
+    pedido,
+    'açaí',
+    SeletorTamanho,
+    TAMANHOS,
+    true,
+  );
   const { topo: topoSorvete, band: bandSorvete } = montarFluxoEstiloAcai(
     sorveteSelfService,
     'sorvete',
     SeletorTamanhoSorvete,
+    TAMANHOS_SORVETE,
+    false,
   );
 
   // Rodapé compartilhado pelos dois modos (conteúdo idêntico ao de antes).

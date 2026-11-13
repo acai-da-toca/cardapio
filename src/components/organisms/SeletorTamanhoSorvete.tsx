@@ -1,4 +1,4 @@
-import { formatarPreco, TAMANHOS, type TamanhoAcai } from '../../data/menu';
+import { formatarPreco, TAMANHOS_SORVETE, type TamanhoAcai } from '../../data/menu';
 import { SORVETE_IMG } from '../../data/sorvete';
 import { FotoProduto } from '../atoms/FotoProduto';
 import { SizePills } from '../molecules/SizePills';
@@ -9,14 +9,20 @@ interface Props {
 }
 
 /**
- * Organismo: foto do sorvete em destaque + pílulas de tamanho/preço. Mesmos
- * tamanhos e preços do açaí (self-service usa a mesma tabela).
+ * Organismo: foto do sorvete em destaque + pílulas de tamanho/preço. Tamanhos
+ * próprios do sorvete (300ml/500ml), diferentes do açaí.
  */
 export function SeletorTamanhoSorvete({ selecionado, onSelecionar }: Props) {
-  const destaque = selecionado ?? TAMANHOS[TAMANHOS.length - 1];
+  const destaque = selecionado ?? TAMANHOS_SORVETE[TAMANHOS_SORVETE.length - 1];
 
   if (!SORVETE_IMG) {
-    return <SizePills selecionado={selecionado} onSelecionar={onSelecionar} />;
+    return (
+      <SizePills
+        selecionado={selecionado}
+        onSelecionar={onSelecionar}
+        tamanhos={TAMANHOS_SORVETE}
+      />
+    );
   }
 
   return (
@@ -27,7 +33,11 @@ export function SeletorTamanhoSorvete({ selecionado, onSelecionar }: Props) {
         preco={formatarPreco(destaque.preco)}
         alt="Sorvete self-service com calda, chantilly e casquinha"
       />
-      <SizePills selecionado={selecionado} onSelecionar={onSelecionar} />
+      <SizePills
+        selecionado={selecionado}
+        onSelecionar={onSelecionar}
+        tamanhos={TAMANHOS_SORVETE}
+      />
     </div>
   );
 }

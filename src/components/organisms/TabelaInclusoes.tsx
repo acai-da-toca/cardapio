@@ -6,6 +6,8 @@ import { useCherrySplash } from '../../hooks/useCherrySplash';
 interface Props {
   selecionado: TamanhoAcai | null;
   onSelecionar: (t: TamanhoAcai) => void;
+  /** Tabela de tamanhos a listar. Padrão: tamanhos do açaí. */
+  tamanhos?: TamanhoAcai[];
 }
 
 function plural(n: number, singular: string, pluralForm: string) {
@@ -22,7 +24,11 @@ const item = {
 };
 
 /** Organismo: tabela do que vem em cada tamanho (linhas selecionáveis). */
-export function TabelaInclusoes({ selecionado, onSelecionar }: Props) {
+export function TabelaInclusoes({
+  selecionado,
+  onSelecionar,
+  tamanhos = TAMANHOS,
+}: Props) {
   return (
     <motion.div
       className="flex flex-col gap-2"
@@ -31,7 +37,7 @@ export function TabelaInclusoes({ selecionado, onSelecionar }: Props) {
       whileInView="show"
       viewport={{ once: true, amount: 0.2 }}
     >
-      {TAMANHOS.map((t) => (
+      {tamanhos.map((t) => (
         <LinhaTamanho
           key={t.id}
           tamanho={t}

@@ -30,6 +30,14 @@ export const TAMANHOS: TamanhoAcai[] = [
   { id: '770', volume: '770ml', preco: 35.0, coberturas: 2, acompanhamentos: 7, frutas: 3 },
 ];
 
+// Tamanhos do sorvete self-service — próprios, diferentes do açaí. Coberturas
+// e frutas não foram informadas pela Camila; usei 1/2 como ponto de partida
+// (confirmar depois).
+export const TAMANHOS_SORVETE: TamanhoAcai[] = [
+  { id: 'sorvete-300', volume: '300ml', preco: 18.0, coberturas: 1, acompanhamentos: 3, frutas: 1 },
+  { id: 'sorvete-500', volume: '500ml', preco: 28.0, coberturas: 2, acompanhamentos: 4, frutas: 2 },
+];
+
 export const FRUTAS: string[] = ['Morango', 'Banana', 'Manga', 'Uva'];
 
 export const COBERTURAS: string[] = [
@@ -63,9 +71,10 @@ export const ACOMPANHAMENTOS: string[] = [
   'Ovomaltine',
 ];
 
-// Sorvete é vendido por peso, a R$59,99/kg. Como o preço depende do peso, o
-// cliente diz quanto quer gastar em reais e a loja pesa pra bater com esse
-// valor — por isso esse valor entra direto no total, sem precisar de peso.
+// Usado quando o cliente quer uma bola de sorvete por cima do açaí (vendida
+// por peso, R$59,99/kg — o cliente diz quanto quer gastar e a loja pesa pra
+// bater com esse valor). O sorvete como produto principal tem tamanho fixo,
+// ver TAMANHOS_SORVETE.
 export const PRECO_SORVETE_KG = 59.99;
 
 export const SORVETES: string[] = [
