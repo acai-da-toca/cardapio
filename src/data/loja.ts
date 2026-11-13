@@ -9,3 +9,6 @@ export const LOJA = {
   instagramHandle: '@acaidatoca__',
   endereco: 'Macaúbas-BA · Galeria Umbuzeiros',
 };
+
+// Valor mínimo do pedido para a entrega sair grátis.
+export const ENTREGA_GRATIS_A_PARTIR_DE = 16.0;

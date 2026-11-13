@@ -1,4 +1,5 @@
 import { COPO_TRUFADO, formatarPreco } from '../../data/menu';
+import { ENTREGA_GRATIS_A_PARTIR_DE } from '../../data/loja';
 import type { ResumoPedido as Resumo } from '../../hooks/usePedido';
 import { SeletorPagamento } from '../molecules/SeletorPagamento';
 
@@ -49,10 +50,12 @@ export function ResumoPedido({
         </Linha>
       )}
       {resumo.sorvetes.length > 0 && (
-        <Linha label="Sorvetes (por peso)">{resumo.sorvetes.join(', ')}</Linha>
+        <Linha label="Sorvetes">{resumo.sorvetes.join(', ')}</Linha>
       )}
-      {resumo.observacaoSorvete && (
-        <Linha label="Obs. sorvete">{resumo.observacaoSorvete}</Linha>
+      {resumo.valorSorvete !== null && resumo.valorSorvete > 0 && (
+        <Linha label="Sorvete (pesagem confere)">
+          {formatarPreco(resumo.valorSorvete)}
+        </Linha>
       )}
       {resumo.adicionais.length > 0 && (
         <Linha label="Adicionais">
@@ -71,14 +74,17 @@ export function ResumoPedido({
       )}
 
       <div className="mt-3 flex items-center justify-between border-t border-white/35 pt-3 text-lg font-bold">
-        <span>{resumo.temItemAConfirmar ? `Total do ${produto}` : 'Total'}</span>
+        <span>{resumo.sorveteSemValor ? `Total do ${produto}` : 'Total'}</span>
         <span className="text-2xl text-amber">{formatarPreco(resumo.total)}</span>
       </div>
-      {resumo.temItemAConfirmar && (
+      {resumo.sorveteSemValor && (
         <p className="mt-1 text-xs text-white/60">
-          Não inclui o sorvete, vendido por peso. O valor é combinado com a loja pelo WhatsApp.
+          Não inclui o sorvete. Diga quanto quer gastar acima pra entrar no total.
         </p>
       )}
+      <p className="mt-1 text-xs text-white/60">
+        Entrega grátis a partir de {formatarPreco(ENTREGA_GRATIS_A_PARTIR_DE)}.
+      </p>
 
       <SeletorPagamento
         selecionado={resumo.formaPagamento}

@@ -1,4 +1,4 @@
-import { COPO_TRUFADO, formatarPreco } from '../../data/menu';
+import { COPO_TRUFADO, formatarPreco, PRECO_SORVETE_KG } from '../../data/menu';
 import { WHATSAPP } from '../../data/loja';
 import { FORMAS_PAGAMENTO } from '../../data/pagamento';
 import type { ResumoPedido as Resumo } from '../../hooks/usePedido';
@@ -18,19 +18,18 @@ function montarMensagem(r: Resumo, produto: string): string {
   if (r.coberturas.length) linhas.push(`🍫 Coberturas: ${r.coberturas.join(', ')}`);
   if (r.acompanhamentos.length)
     linhas.push(`✨ Acompanhamentos: ${r.acompanhamentos.join(', ')}`);
-  if (r.sorvetes.length)
-    linhas.push(`🍨 Sorvetes (por peso, combinar valor): ${r.sorvetes.join(', ')}`);
-  if (r.observacaoSorvete) linhas.push(`📝 Obs. sorvete: ${r.observacaoSorvete}`);
+  if (r.sorvetes.length) linhas.push(`🍨 Sorvetes: ${r.sorvetes.join(', ')}`);
+  if (r.valorSorvete)
+    linhas.push(
+      `💵 Sorvete (${formatarPreco(PRECO_SORVETE_KG)}/kg): ${formatarPreco(r.valorSorvete)}, pesagem confere na loja`,
+    );
   if (r.adicionais.length)
     linhas.push(
       `➕ Adicionais: ${r.adicionais.join(', ')} (${formatarPreco(r.valorAdicionais)})`,
     );
   const trufado = COPO_TRUFADO.find((t) => t.id === r.trufado)?.nome;
   if (trufado) linhas.push(`🍯 Trufado: ${trufado}`);
-  const rotuloTotal = r.temItemAConfirmar ? 'Total do açaí' : 'Total';
-  linhas.push('', `💰 ${rotuloTotal}: ${formatarPreco(r.total)}`);
-  if (r.temItemAConfirmar)
-    linhas.push('(não inclui o sorvete, valor combinado à parte)');
+  linhas.push('', `💰 Total: ${formatarPreco(r.total)}`);
   const pagamento = FORMAS_PAGAMENTO.find((f) => f.id === r.formaPagamento)?.nome;
   if (pagamento) linhas.push(`💳 Pagamento: ${pagamento}`);
   return linhas.join('\n');
@@ -42,7 +41,8 @@ function montarMensagem(r: Resumo, produto: string): string {
  * em "fazer o pedido".
  */
 export function BotaoPedido({ resumo, produto = 'açaí' }: Props) {
-  if (!resumo.tamanho || !resumo.formaPagamento) return null;
+  if (!resumo.tamanho || !resumo.formaPagamento || resumo.sorveteSemValor)
+    return null;
 
   const mensagem = montarMensagem(resumo, produto);
   const href = WHATSAPP

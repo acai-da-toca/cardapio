@@ -12,7 +12,7 @@ export interface ResumoPedido {
   coberturas: string[];
   acompanhamentos: string[];
   sorvetes: string[];
-  observacaoSorvete: string;
+  valorSorvete: number | null;
   adicionais: string[];
   trufado: string | null;
   formaPagamento: string | null;
@@ -25,8 +25,8 @@ export interface ResumoPedido {
   valorTrufado: number;
   valorAdicionais: number;
   total: number;
-  // sorvete é vendido por peso, sem preço fixo — true quando algum foi escolhido
-  temItemAConfirmar: boolean;
+  // sorvete foi escolhido mas o cliente ainda não disse quanto quer gastar
+  sorveteSemValor: boolean;
 }
 
 export function usePedido() {
@@ -35,7 +35,7 @@ export function usePedido() {
   const [coberturas, setCoberturas] = useState<string[]>([]);
   const [acompanhamentos, setAcompanhamentos] = useState<string[]>([]);
   const [sorvetes, setSorvetes] = useState<string[]>([]);
-  const [observacaoSorvete, setObservacaoSorvete] = useState('');
+  const [valorSorvete, setValorSorvete] = useState<number | null>(null);
   const [adicionais, setAdicionais] = useState<string[]>([]);
   const [trufado, setTrufado] = useState<string | null>(null);
   const [formaPagamento, setFormaPagamento] = useState<string | null>(null);
@@ -70,7 +70,7 @@ export function usePedido() {
     setCoberturas([]);
     setAcompanhamentos([]);
     setSorvetes([]);
-    setObservacaoSorvete('');
+    setValorSorvete(null);
     setAdicionais([]);
     setTrufado(null);
     setFormaPagamento(null);
@@ -100,7 +100,7 @@ export function usePedido() {
       coberturas,
       acompanhamentos,
       sorvetes,
-      observacaoSorvete,
+      valorSorvete,
       adicionais,
       trufado,
       formaPagamento,
@@ -111,8 +111,8 @@ export function usePedido() {
       valorExtras,
       valorTrufado,
       valorAdicionais,
-      total: base + valorExtras + valorTrufado + valorAdicionais,
-      temItemAConfirmar: sorvetes.length > 0,
+      total: base + valorExtras + valorTrufado + valorAdicionais + (valorSorvete ?? 0),
+      sorveteSemValor: sorvetes.length > 0 && !valorSorvete,
     };
   }, [
     tamanho,
@@ -120,7 +120,7 @@ export function usePedido() {
     coberturas,
     acompanhamentos,
     sorvetes,
-    observacaoSorvete,
+    valorSorvete,
     adicionais,
     trufado,
     formaPagamento,
@@ -132,12 +132,12 @@ export function usePedido() {
     coberturas,
     acompanhamentos,
     sorvetes,
-    observacaoSorvete,
+    valorSorvete,
     adicionais,
     trufado,
     formaPagamento,
     setTrufado,
-    setObservacaoSorvete,
+    setValorSorvete,
     escolherFormaPagamento: setFormaPagamento,
     escolherTamanho,
     toggleFruta,

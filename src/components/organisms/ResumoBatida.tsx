@@ -1,4 +1,5 @@
 import type { SaborBatida, TamanhoBatida } from '../../data/batidas';
+import { ENTREGA_GRATIS_A_PARTIR_DE } from '../../data/loja';
 import { formatarPreco } from '../../data/menu';
 import { SeletorPagamento } from '../molecules/SeletorPagamento';
 
@@ -34,6 +35,9 @@ export function ResumoBatida({
         <span>Total</span>
         <span className="text-2xl text-amber">{formatarPreco(preco)}</span>
       </div>
+      <p className="mt-1 text-xs text-white/60">
+        Entrega grátis a partir de {formatarPreco(ENTREGA_GRATIS_A_PARTIR_DE)}.
+      </p>
 
       <SeletorPagamento
         selecionado={formaPagamento}

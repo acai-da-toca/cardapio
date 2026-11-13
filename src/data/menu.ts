@@ -63,9 +63,11 @@ export const ACOMPANHAMENTOS: string[] = [
   'Ovomaltine',
 ];
 
-// Sorvete é vendido por peso (kg), não por item — por isso não tem preço fixo
-// aqui; o cliente escreve o que quer no campo de observação e a loja confirma
-// o valor pelo WhatsApp. O mousse (adicional) já tem preço fixo por unidade.
+// Sorvete é vendido por peso, a R$59,99/kg. Como o preço depende do peso, o
+// cliente diz quanto quer gastar em reais e a loja pesa pra bater com esse
+// valor — por isso esse valor entra direto no total, sem precisar de peso.
+export const PRECO_SORVETE_KG = 59.99;
+
 export const SORVETES: string[] = [
   'Morango',
   'Ovomaltine',
