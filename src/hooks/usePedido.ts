@@ -18,10 +18,8 @@ export interface ResumoPedido {
   trufado: string | null;
   acaiZeroQtd: number;
   formaPagamento: string | null;
-  // extras acima do limite incluso
-  frutasExtras: number;
-  coberturasExtras: number;
-  acompanhamentosExtras: number;
+  // frutas + coberturas + acompanhamentos dividem a mesma cota (tamanho.acompanhamentos)
+  totalItensInclusos: number;
   totalExtrasItens: number;
   valorExtras: number;
   valorTrufado: number;
@@ -82,20 +80,13 @@ export function usePedido() {
   }
 
   const resumo: ResumoPedido = useMemo(() => {
-    const frutasExtras =
-      tamanho && tamanho.frutas !== null
-        ? Math.max(0, frutas.length - tamanho.frutas)
-        : 0;
-    const coberturasExtras =
-      tamanho && tamanho.coberturas !== null
-        ? Math.max(0, coberturas.length - tamanho.coberturas)
-        : 0;
-    const acompanhamentosExtras = tamanho
-      ? Math.max(0, acompanhamentos.length - tamanho.acompanhamentos)
+    // Frutas, coberturas e acompanhamentos dividem a mesma cota — não são
+    // limites separados (ex.: 7 acompanhamentos não vira 7 + frutas à parte).
+    const totalItensInclusos =
+      frutas.length + coberturas.length + acompanhamentos.length;
+    const totalExtrasItens = tamanho
+      ? Math.max(0, totalItensInclusos - tamanho.acompanhamentos)
       : 0;
-
-    const totalExtrasItens =
-      frutasExtras + coberturasExtras + acompanhamentosExtras;
     const valorExtras = totalExtrasItens * PRECO_ADICIONAL_ITEM;
     const valorTrufado = trufado ? PRECO_TRUFADO : 0;
     const valorAdicionais = adicionais.length * PRECO_MOUSSE;
@@ -113,9 +104,7 @@ export function usePedido() {
       trufado,
       acaiZeroQtd,
       formaPagamento,
-      frutasExtras,
-      coberturasExtras,
-      acompanhamentosExtras,
+      totalItensInclusos,
       totalExtrasItens,
       valorExtras,
       valorTrufado,

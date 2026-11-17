@@ -10,6 +10,12 @@ interface Props {
   selecionados: string[];
   incluso: number | null;
   onToggle: (valor: string) => void;
+  /**
+   * Total já escolhido somando outros grupos que dividem a mesma cota (ex.:
+   * frutas + coberturas + acompanhamentos). Quando ausente, usa só
+   * `selecionados.length` deste grupo.
+   */
+  contagemCompartilhada?: number;
 }
 
 // Variants: os chips surgem em cascata (stagger) quando a seção entra na tela,
@@ -36,9 +42,10 @@ export function ChipGroup({
   selecionados,
   incluso,
   onToggle,
+  contagemCompartilhada,
 }: Props) {
-  const extras =
-    incluso === null ? 0 : Math.max(0, selecionados.length - incluso);
+  const contagem = contagemCompartilhada ?? selecionados.length;
+  const extras = incluso === null ? 0 : Math.max(0, contagem - incluso);
 
   return (
     <div className="mb-5 last:mb-0">
@@ -46,7 +53,7 @@ export function ChipGroup({
         {titulo}
         {incluso !== null && (
           <>
-            {' '}· {selecionados.length}/{incluso}
+            {' '}· {contagem}/{incluso}
             {extras > 0 ? ` (+${extras})` : ''}
           </>
         )}

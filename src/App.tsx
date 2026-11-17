@@ -93,7 +93,8 @@ function montarFluxoEstiloAcai(
         cor="fruta"
         opcoes={FRUTAS}
         selecionados={p.frutas}
-        incluso={tamanho?.frutas ?? null}
+        incluso={tamanho?.acompanhamentos ?? null}
+        contagemCompartilhada={p.resumo.totalItensInclusos}
         onToggle={p.toggleFruta}
       />
       <ChipGroup
@@ -101,7 +102,8 @@ function montarFluxoEstiloAcai(
         cor="cobertura"
         opcoes={COBERTURAS}
         selecionados={p.coberturas}
-        incluso={tamanho?.coberturas ?? null}
+        incluso={tamanho?.acompanhamentos ?? null}
+        contagemCompartilhada={p.resumo.totalItensInclusos}
         onToggle={p.toggleCobertura}
       />
       <ChipGroup
@@ -110,6 +112,7 @@ function montarFluxoEstiloAcai(
         opcoes={ACOMPANHAMENTOS}
         selecionados={p.acompanhamentos}
         incluso={tamanho?.acompanhamentos ?? null}
+        contagemCompartilhada={p.resumo.totalItensInclusos}
         onToggle={p.toggleAcompanhamento}
       />
       {mostrarSorveteExtra && (

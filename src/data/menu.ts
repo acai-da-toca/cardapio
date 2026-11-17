@@ -12,11 +12,9 @@ export interface TamanhoAcai {
   id: string;
   volume: string;
   preco: number;
-  // Regras de quantas escolhas o tamanho permite. null = escolha livre,
-  // sem limite nem cobrança de item extra.
-  coberturas: number | null;
+  // Frutas, coberturas e acompanhamentos dividem a mesma cota — não são
+  // limites separados. Esse número é o total combinado de itens inclusos.
   acompanhamentos: number;
-  frutas: number | null;
 }
 
 export interface OpcaoTrufado {
@@ -25,18 +23,16 @@ export interface OpcaoTrufado {
 }
 
 export const TAMANHOS: TamanhoAcai[] = [
-  { id: '330', volume: '330ml', preco: 16.0, coberturas: 1, acompanhamentos: 4, frutas: 1 },
-  { id: '440', volume: '440ml', preco: 19.0, coberturas: 1, acompanhamentos: 5, frutas: 2 },
-  { id: '550', volume: '550ml', preco: 23.0, coberturas: 2, acompanhamentos: 6, frutas: 2 },
-  { id: '770', volume: '770ml', preco: 35.0, coberturas: 2, acompanhamentos: 7, frutas: 3 },
+  { id: '330', volume: '330ml', preco: 16.0, acompanhamentos: 4 },
+  { id: '440', volume: '440ml', preco: 19.0, acompanhamentos: 5 },
+  { id: '550', volume: '550ml', preco: 23.0, acompanhamentos: 6 },
+  { id: '770', volume: '770ml', preco: 35.0, acompanhamentos: 7 },
 ];
 
-// Tamanhos do sorvete self-service — próprios, diferentes do açaí. Frutas
-// ficam de escolha livre do cliente (confirmado pela Camila), sem limite.
-// Coberturas não foi mencionado, então também ficou livre.
+// Tamanhos do sorvete self-service — próprios, diferentes do açaí.
 export const TAMANHOS_SORVETE: TamanhoAcai[] = [
-  { id: 'sorvete-300', volume: '300ml', preco: 18.0, coberturas: null, acompanhamentos: 4, frutas: null },
-  { id: 'sorvete-500', volume: '500ml', preco: 28.0, coberturas: null, acompanhamentos: 4, frutas: null },
+  { id: 'sorvete-300', volume: '300ml', preco: 18.0, acompanhamentos: 4 },
+  { id: 'sorvete-500', volume: '500ml', preco: 28.0, acompanhamentos: 4 },
 ];
 
 export const FRUTAS: string[] = ['Morango', 'Banana', 'Manga', 'Uva'];
