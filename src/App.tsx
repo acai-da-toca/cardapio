@@ -101,7 +101,7 @@ function montarFluxoEstiloAcai(
             cor="sorvete"
             opcoes={SORVETES}
             selecionados={p.sorvetes}
-            incluso={null}
+            incluso={tamanho?.acompanhamentos ?? null}
             onToggle={p.toggleSorvete}
           />
           {p.sorvetes.length > 0 && (
