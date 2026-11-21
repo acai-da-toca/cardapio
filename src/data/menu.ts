@@ -1,7 +1,7 @@
 // Dados do cardápio "Monte seu Açaí".
 // Centralizados aqui para facilitar manutenção de preços e itens.
 
-export type ItemCategoria = 'acompanhamento' | 'sorvete' | 'adicional';
+export type ItemCategoria = 'acompanhamento' | 'adicional';
 
 export interface TamanhoAcai {
   id: string;
@@ -30,13 +30,15 @@ export const TAMANHOS_SORVETE: TamanhoAcai[] = [
   { id: 'sorvete-500', volume: '500ml', preco: 28.0, acompanhamentos: 4 },
 ];
 
-// Frutas, coberturas e os antigos acompanhamentos agora são tudo uma lista
-// só — a loja não separa mais por categoria, é tudo "acompanhamento".
+// Frutas, coberturas, sabores de sorvete e os antigos acompanhamentos agora
+// são tudo uma lista só — a loja não separa mais por categoria, é tudo
+// "acompanhamento".
 export const ACOMPANHAMENTOS: string[] = [
   'Morango',
   'Banana',
   'Manga',
   'Uva',
+  'Limão',
   'Menta',
   'Chocolate',
   'Frutas vermelhas',
@@ -60,23 +62,17 @@ export const ACOMPANHAMENTOS: string[] = [
   'Biscoito Look Wafer',
   'Nutella',
   'Ovomaltine',
-];
-
-// Usado quando o cliente quer uma bola de sorvete por cima do açaí (vendida
-// por peso, R$59,99/kg — o cliente diz quanto quer gastar e a loja pesa pra
-// bater com esse valor). O sorvete como produto principal tem tamanho fixo,
-// ver TAMANHOS_SORVETE.
-export const PRECO_SORVETE_KG = 59.99;
-
-export const SORVETES: string[] = [
-  'Morango',
-  'Ovomaltine',
-  'Chocolate',
   'Pedacinho do Céu',
   'Maracujá Trufado',
   'Ninho Trufado',
   'Iogurte',
 ];
+
+// Sorvete por cima do açaí é vendido por peso (R$59,99/kg). O cliente diz
+// quantas gramas quer (até o volume do tamanho escolhido, em ml) e o sistema
+// calcula o valor sozinho. O sorvete como produto principal tem tamanho
+// fixo, ver TAMANHOS_SORVETE.
+export const PRECO_SORVETE_KG = 59.99;
 
 export const ADICIONAIS: string[] = ['Mousse Maracujá', 'Mousse Morango'];
 

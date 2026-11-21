@@ -35,12 +35,9 @@ export function ResumoPedido({
       {resumo.acompanhamentos.length > 0 && (
         <Linha label="Acompanhamentos">{resumo.acompanhamentos.join(', ')}</Linha>
       )}
-      {resumo.sorvetes.length > 0 && (
-        <Linha label="Sorvetes">{resumo.sorvetes.join(', ')}</Linha>
-      )}
-      {resumo.valorSorvete !== null && resumo.valorSorvete > 0 && (
-        <Linha label="Sorvete (pesagem confere)">
-          {formatarPreco(resumo.valorSorvete)}
+      {resumo.sorveteGramas !== null && resumo.sorveteGramas > 0 && (
+        <Linha label={`Sorvete (${resumo.sorveteGramas}g)`}>
+          {formatarPreco(resumo.valorSorvete ?? 0)}
         </Linha>
       )}
       {resumo.adicionais.length > 0 && (
@@ -65,14 +62,9 @@ export function ResumoPedido({
       )}
 
       <div className="mt-3 flex items-center justify-between border-t border-white/35 pt-3 text-lg font-bold">
-        <span>{resumo.sorveteSemValor ? `Total do ${produto}` : 'Total'}</span>
+        <span>Total</span>
         <span className="text-2xl text-amber">{formatarPreco(resumo.total)}</span>
       </div>
-      {resumo.sorveteSemValor && (
-        <p className="mt-1 text-xs text-white/60">
-          Não inclui o sorvete. Diga quanto quer gastar acima pra entrar no total.
-        </p>
-      )}
       <p className="mt-1 text-xs text-white/60">
         Entrega grátis a partir de {formatarPreco(ENTREGA_GRATIS_A_PARTIR_DE)}.
       </p>

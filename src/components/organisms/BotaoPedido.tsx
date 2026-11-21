@@ -1,4 +1,4 @@
-import { COPO_TRUFADO, formatarPreco, PRECO_SORVETE_KG } from '../../data/menu';
+import { COPO_TRUFADO, formatarPreco } from '../../data/menu';
 import { WHATSAPP } from '../../data/loja';
 import { FORMAS_PAGAMENTO } from '../../data/pagamento';
 import type { ResumoPedido as Resumo } from '../../hooks/usePedido';
@@ -16,10 +16,9 @@ function montarMensagem(r: Resumo, produto: string): string {
   linhas.push(`🥤 Tamanho: ${r.tamanho.volume} (${formatarPreco(r.tamanho.preco)})`);
   if (r.acompanhamentos.length)
     linhas.push(`✨ Acompanhamentos: ${r.acompanhamentos.join(', ')}`);
-  if (r.sorvetes.length) linhas.push(`🍨 Sorvetes: ${r.sorvetes.join(', ')}`);
-  if (r.valorSorvete)
+  if (r.sorveteGramas)
     linhas.push(
-      `💵 Sorvete (${formatarPreco(PRECO_SORVETE_KG)}/kg): ${formatarPreco(r.valorSorvete)}, pesagem confere na loja`,
+      `🍨 Sorvete (${r.sorveteGramas}g): ${formatarPreco(r.valorSorvete ?? 0)}`,
     );
   if (r.adicionais.length)
     linhas.push(
@@ -41,8 +40,7 @@ function montarMensagem(r: Resumo, produto: string): string {
  * em "fazer o pedido".
  */
 export function BotaoPedido({ resumo, produto = 'açaí' }: Props) {
-  if (!resumo.tamanho || !resumo.formaPagamento || resumo.sorveteSemValor)
-    return null;
+  if (!resumo.tamanho || !resumo.formaPagamento) return null;
 
   const mensagem = montarMensagem(resumo, produto);
   const href = WHATSAPP

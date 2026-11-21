@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { CampoValorReais } from './components/atoms/CampoValorReais';
 import { DicaToque } from './components/atoms/DicaToque';
 import { LogoImg } from './components/atoms/LogoImg';
 import { RevealOnScroll } from './components/atoms/RevealOnScroll';
@@ -23,9 +22,6 @@ import { LOJA } from './data/loja';
 import {
   ACOMPANHAMENTOS,
   ADICIONAIS,
-  formatarPreco,
-  PRECO_SORVETE_KG,
-  SORVETES,
   TAMANHOS,
   TAMANHOS_SORVETE,
   type TamanhoAcai,
@@ -38,10 +34,10 @@ import { usePedidoBatida } from './hooks/usePedidoBatida';
  * sorvete — mesmas categorias e regras, só troca o estado, a tabela de
  * tamanhos e o nome do produto nos textos (resumo e mensagem do WhatsApp).
  *
- * O grupo "Sorvetes" (bola de sorvete por cima, cobrada por peso) só faz
- * sentido como extra do açaí — dentro do próprio fluxo do sorvete ele ficava
- * redundante e confuso ("pedir sorvete dentro do pedido de sorvete"), por
- * isso só aparece quando mostrarSorveteExtra é true.
+ * O cartão de sorvete por cima (vendido por peso) só faz sentido como extra
+ * do açaí — dentro do próprio fluxo do sorvete ficaria redundante ("pedir
+ * sorvete dentro do pedido de sorvete"), por isso só aparece quando
+ * mostrarSorveteExtra é true.
  */
 function montarFluxoEstiloAcai(
   p: ReturnType<typeof usePedido>,
@@ -94,34 +90,6 @@ function montarFluxoEstiloAcai(
         incluso={tamanho?.acompanhamentos ?? null}
         onToggle={p.toggleAcompanhamento}
       />
-      {mostrarSorveteExtra && (
-        <>
-          <ChipGroup
-            titulo="Sorvetes"
-            cor="sorvete"
-            opcoes={SORVETES}
-            selecionados={p.sorvetes}
-            incluso={tamanho?.acompanhamentos ?? null}
-            onToggle={p.toggleSorvete}
-          />
-          {p.sorvetes.length > 0 && (
-            <div className="-mt-3 mb-5">
-              <label
-                htmlFor={`valor-sorvete-${produto}`}
-                className="mb-1.5 block text-xs text-white/70"
-              >
-                Sorvete {formatarPreco(PRECO_SORVETE_KG)}/kg. Quanto você quer gastar?
-              </label>
-              <CampoValorReais
-                id={`valor-sorvete-${produto}`}
-                valor={p.valorSorvete}
-                onChange={p.setValorSorvete}
-                placeholder="Ex.: 20"
-              />
-            </div>
-          )}
-        </>
-      )}
       <ChipGroup
         titulo="Adicionais"
         cor="adicional"
@@ -137,6 +105,9 @@ function montarFluxoEstiloAcai(
           onTrufado={p.setTrufado}
           acaiZeroQtd={p.acaiZeroQtd}
           onAcaiZeroQtd={p.setAcaiZeroQtd}
+          tamanho={tamanho}
+          sorveteGramas={mostrarSorveteExtra ? p.sorveteGramas : undefined}
+          onSorveteGramas={mostrarSorveteExtra ? p.setSorveteGramas : undefined}
         />
       </RevealOnScroll>
 

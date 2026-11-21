@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { Chip } from '../atoms/Chip';
 
-type Cor = 'acompanhamento' | 'sorvete' | 'adicional';
+type Cor = 'acompanhamento' | 'adicional';
 
 interface Props {
   titulo: string;

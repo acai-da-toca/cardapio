@@ -3,6 +3,7 @@ import {
   PRECO_ACAI_ZERO,
   PRECO_ADICIONAL_ITEM,
   PRECO_MOUSSE,
+  PRECO_SORVETE_KG,
   PRECO_TRUFADO,
   TamanhoAcai,
 } from '../data/menu';
@@ -10,7 +11,7 @@ import {
 export interface ResumoPedido {
   tamanho: TamanhoAcai | null;
   acompanhamentos: string[];
-  sorvetes: string[];
+  sorveteGramas: number | null;
   valorSorvete: number | null;
   adicionais: string[];
   trufado: string | null;
@@ -22,15 +23,12 @@ export interface ResumoPedido {
   valorAdicionais: number;
   valorAcaiZero: number;
   total: number;
-  // sorvete foi escolhido mas o cliente ainda não disse quanto quer gastar
-  sorveteSemValor: boolean;
 }
 
 export function usePedido() {
   const [tamanho, setTamanho] = useState<TamanhoAcai | null>(null);
   const [acompanhamentos, setAcompanhamentos] = useState<string[]>([]);
-  const [sorvetes, setSorvetes] = useState<string[]>([]);
-  const [valorSorvete, setValorSorvete] = useState<number | null>(null);
+  const [sorveteGramas, setSorveteGramas] = useState<number | null>(null);
   const [adicionais, setAdicionais] = useState<string[]>([]);
   const [trufado, setTrufado] = useState<string | null>(null);
   const [acaiZeroQtd, setAcaiZeroQtd] = useState(0);
@@ -50,7 +48,6 @@ export function usePedido() {
 
   const toggleAcompanhamento = (v: string) =>
     toggle(v, acompanhamentos, setAcompanhamentos);
-  const toggleSorvete = (v: string) => toggle(v, sorvetes, setSorvetes);
   const toggleAdicional = (v: string) => toggle(v, adicionais, setAdicionais);
 
   function escolherTamanho(novo: TamanhoAcai) {
@@ -61,8 +58,7 @@ export function usePedido() {
   function limpar() {
     setTamanho(null);
     setAcompanhamentos([]);
-    setSorvetes([]);
-    setValorSorvete(null);
+    setSorveteGramas(null);
     setAdicionais([]);
     setTrufado(null);
     setAcaiZeroQtd(0);
@@ -77,12 +73,15 @@ export function usePedido() {
     const valorTrufado = trufado ? PRECO_TRUFADO : 0;
     const valorAdicionais = adicionais.length * PRECO_MOUSSE;
     const valorAcaiZero = acaiZeroQtd * PRECO_ACAI_ZERO;
+    const valorSorvete = sorveteGramas
+      ? (sorveteGramas / 1000) * PRECO_SORVETE_KG
+      : null;
     const base = tamanho?.preco ?? 0;
 
     return {
       tamanho,
       acompanhamentos,
-      sorvetes,
+      sorveteGramas,
       valorSorvete,
       adicionais,
       trufado,
@@ -100,13 +99,11 @@ export function usePedido() {
         valorAdicionais +
         valorAcaiZero +
         (valorSorvete ?? 0),
-      sorveteSemValor: sorvetes.length > 0 && !valorSorvete,
     };
   }, [
     tamanho,
     acompanhamentos,
-    sorvetes,
-    valorSorvete,
+    sorveteGramas,
     adicionais,
     trufado,
     acaiZeroQtd,
@@ -116,19 +113,17 @@ export function usePedido() {
   return {
     tamanho,
     acompanhamentos,
-    sorvetes,
-    valorSorvete,
+    sorveteGramas,
     adicionais,
     trufado,
     acaiZeroQtd,
     formaPagamento,
     setTrufado,
     setAcaiZeroQtd,
-    setValorSorvete,
+    setSorveteGramas,
     escolherFormaPagamento: setFormaPagamento,
     escolherTamanho,
     toggleAcompanhamento,
-    toggleSorvete,
     toggleAdicional,
     limpar,
     resumo,

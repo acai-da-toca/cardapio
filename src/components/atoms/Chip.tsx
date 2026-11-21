@@ -2,11 +2,10 @@ import { motion } from 'framer-motion';
 import { CherrySplash } from './CherrySplash';
 import { useCherrySplash } from '../../hooks/useCherrySplash';
 
-type Cor = 'acompanhamento' | 'sorvete' | 'adicional';
+type Cor = 'acompanhamento' | 'adicional';
 
 const COR_HEX: Record<Cor, string> = {
   acompanhamento: '#FDB75B',
-  sorvete: '#8EC5FF',
   adicional: '#C9A6FF',
 };
 
