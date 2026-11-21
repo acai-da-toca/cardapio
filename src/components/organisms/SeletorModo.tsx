@@ -14,7 +14,7 @@ const OPCOES: {
   {
     id: 'copo',
     titulo: 'Açaí no Copo',
-    descricao: 'Monte com frutas, coberturas e acompanhamentos',
+    descricao: 'Monte do seu jeito, com os acompanhamentos que quiser',
     gradienteIdle: 'from-purple/90 to-deep',
     gradienteAtivo: 'from-magenta to-deep',
   },
@@ -28,7 +28,7 @@ const OPCOES: {
   {
     id: 'sorvete',
     titulo: 'Sorvete',
-    descricao: 'Monte com frutas, coberturas e acompanhamentos',
+    descricao: 'Monte do seu jeito, com os acompanhamentos que quiser',
     gradienteIdle: 'from-purple/90 to-deep',
     gradienteAtivo: 'from-magenta to-deep',
   },

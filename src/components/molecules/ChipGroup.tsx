@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { Chip } from '../atoms/Chip';
 
-type Cor = 'fruta' | 'cobertura' | 'acompanhamento' | 'sorvete' | 'adicional';
+type Cor = 'acompanhamento' | 'sorvete' | 'adicional';
 
 interface Props {
   titulo: string;
@@ -10,12 +10,6 @@ interface Props {
   selecionados: string[];
   incluso: number | null;
   onToggle: (valor: string) => void;
-  /**
-   * Total já escolhido somando outros grupos que dividem a mesma cota (ex.:
-   * frutas + coberturas + acompanhamentos). Quando ausente, usa só
-   * `selecionados.length` deste grupo.
-   */
-  contagemCompartilhada?: number;
 }
 
 // Variants: os chips surgem em cascata (stagger) quando a seção entra na tela,
@@ -42,10 +36,9 @@ export function ChipGroup({
   selecionados,
   incluso,
   onToggle,
-  contagemCompartilhada,
 }: Props) {
-  const contagem = contagemCompartilhada ?? selecionados.length;
-  const extras = incluso === null ? 0 : Math.max(0, contagem - incluso);
+  const extras =
+    incluso === null ? 0 : Math.max(0, selecionados.length - incluso);
 
   return (
     <div className="mb-5 last:mb-0">
@@ -53,7 +46,7 @@ export function ChipGroup({
         {titulo}
         {incluso !== null && (
           <>
-            {' '}· {contagem}/{incluso}
+            {' '}· {selecionados.length}/{incluso}
             {extras > 0 ? ` (+${extras})` : ''}
           </>
         )}

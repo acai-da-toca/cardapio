@@ -9,8 +9,6 @@ import {
 
 export interface ResumoPedido {
   tamanho: TamanhoAcai | null;
-  frutas: string[];
-  coberturas: string[];
   acompanhamentos: string[];
   sorvetes: string[];
   valorSorvete: number | null;
@@ -18,8 +16,6 @@ export interface ResumoPedido {
   trufado: string | null;
   acaiZeroQtd: number;
   formaPagamento: string | null;
-  // frutas + coberturas + acompanhamentos dividem a mesma cota (tamanho.acompanhamentos)
-  totalItensInclusos: number;
   totalExtrasItens: number;
   valorExtras: number;
   valorTrufado: number;
@@ -32,8 +28,6 @@ export interface ResumoPedido {
 
 export function usePedido() {
   const [tamanho, setTamanho] = useState<TamanhoAcai | null>(null);
-  const [frutas, setFrutas] = useState<string[]>([]);
-  const [coberturas, setCoberturas] = useState<string[]>([]);
   const [acompanhamentos, setAcompanhamentos] = useState<string[]>([]);
   const [sorvetes, setSorvetes] = useState<string[]>([]);
   const [valorSorvete, setValorSorvete] = useState<number | null>(null);
@@ -54,8 +48,6 @@ export function usePedido() {
     }
   }
 
-  const toggleFruta = (v: string) => toggle(v, frutas, setFrutas);
-  const toggleCobertura = (v: string) => toggle(v, coberturas, setCoberturas);
   const toggleAcompanhamento = (v: string) =>
     toggle(v, acompanhamentos, setAcompanhamentos);
   const toggleSorvete = (v: string) => toggle(v, sorvetes, setSorvetes);
@@ -68,8 +60,6 @@ export function usePedido() {
 
   function limpar() {
     setTamanho(null);
-    setFrutas([]);
-    setCoberturas([]);
     setAcompanhamentos([]);
     setSorvetes([]);
     setValorSorvete(null);
@@ -80,12 +70,8 @@ export function usePedido() {
   }
 
   const resumo: ResumoPedido = useMemo(() => {
-    // Frutas, coberturas e acompanhamentos dividem a mesma cota — não são
-    // limites separados (ex.: 7 acompanhamentos não vira 7 + frutas à parte).
-    const totalItensInclusos =
-      frutas.length + coberturas.length + acompanhamentos.length;
     const totalExtrasItens = tamanho
-      ? Math.max(0, totalItensInclusos - tamanho.acompanhamentos)
+      ? Math.max(0, acompanhamentos.length - tamanho.acompanhamentos)
       : 0;
     const valorExtras = totalExtrasItens * PRECO_ADICIONAL_ITEM;
     const valorTrufado = trufado ? PRECO_TRUFADO : 0;
@@ -95,8 +81,6 @@ export function usePedido() {
 
     return {
       tamanho,
-      frutas,
-      coberturas,
       acompanhamentos,
       sorvetes,
       valorSorvete,
@@ -104,7 +88,6 @@ export function usePedido() {
       trufado,
       acaiZeroQtd,
       formaPagamento,
-      totalItensInclusos,
       totalExtrasItens,
       valorExtras,
       valorTrufado,
@@ -121,8 +104,6 @@ export function usePedido() {
     };
   }, [
     tamanho,
-    frutas,
-    coberturas,
     acompanhamentos,
     sorvetes,
     valorSorvete,
@@ -134,8 +115,6 @@ export function usePedido() {
 
   return {
     tamanho,
-    frutas,
-    coberturas,
     acompanhamentos,
     sorvetes,
     valorSorvete,
@@ -148,8 +127,6 @@ export function usePedido() {
     setValorSorvete,
     escolherFormaPagamento: setFormaPagamento,
     escolherTamanho,
-    toggleFruta,
-    toggleCobertura,
     toggleAcompanhamento,
     toggleSorvete,
     toggleAdicional,

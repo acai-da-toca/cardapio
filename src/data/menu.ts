@@ -1,12 +1,7 @@
 // Dados do cardápio "Monte seu Açaí".
 // Centralizados aqui para facilitar manutenção de preços e itens.
 
-export type ItemCategoria =
-  | 'fruta'
-  | 'cobertura'
-  | 'acompanhamento'
-  | 'sorvete'
-  | 'adicional';
+export type ItemCategoria = 'acompanhamento' | 'sorvete' | 'adicional';
 
 export interface TamanhoAcai {
   id: string;
@@ -35,19 +30,18 @@ export const TAMANHOS_SORVETE: TamanhoAcai[] = [
   { id: 'sorvete-500', volume: '500ml', preco: 28.0, acompanhamentos: 4 },
 ];
 
-export const FRUTAS: string[] = ['Morango', 'Banana', 'Manga', 'Uva'];
-
-export const COBERTURAS: string[] = [
-  'Uva',
+// Frutas, coberturas e os antigos acompanhamentos agora são tudo uma lista
+// só — a loja não separa mais por categoria, é tudo "acompanhamento".
+export const ACOMPANHAMENTOS: string[] = [
   'Morango',
+  'Banana',
+  'Manga',
+  'Uva',
   'Menta',
   'Chocolate',
   'Frutas vermelhas',
   'Chocolate meio amargo',
   'Chiclete',
-];
-
-export const ACOMPANHAMENTOS: string[] = [
   'Gotas de chocolate',
   'Amendoim',
   'Paçoca',

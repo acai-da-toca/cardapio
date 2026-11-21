@@ -32,12 +32,6 @@ export function ResumoPedido({
       <Linha label="Tamanho">
         {tamanho.volume} · {formatarPreco(tamanho.preco)}
       </Linha>
-      {resumo.frutas.length > 0 && (
-        <Linha label="Frutas">{resumo.frutas.join(', ')}</Linha>
-      )}
-      {resumo.coberturas.length > 0 && (
-        <Linha label="Coberturas">{resumo.coberturas.join(', ')}</Linha>
-      )}
       {resumo.acompanhamentos.length > 0 && (
         <Linha label="Acompanhamentos">{resumo.acompanhamentos.join(', ')}</Linha>
       )}

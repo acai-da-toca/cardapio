@@ -23,9 +23,7 @@ import { LOJA } from './data/loja';
 import {
   ACOMPANHAMENTOS,
   ADICIONAIS,
-  COBERTURAS,
   formatarPreco,
-  FRUTAS,
   PRECO_SORVETE_KG,
   SORVETES,
   TAMANHOS,
@@ -89,30 +87,11 @@ function montarFluxoEstiloAcai(
       </RevealOnScroll>
 
       <ChipGroup
-        titulo="Frutas"
-        cor="fruta"
-        opcoes={FRUTAS}
-        selecionados={p.frutas}
-        incluso={tamanho?.acompanhamentos ?? null}
-        contagemCompartilhada={p.resumo.totalItensInclusos}
-        onToggle={p.toggleFruta}
-      />
-      <ChipGroup
-        titulo="Coberturas"
-        cor="cobertura"
-        opcoes={COBERTURAS}
-        selecionados={p.coberturas}
-        incluso={tamanho?.acompanhamentos ?? null}
-        contagemCompartilhada={p.resumo.totalItensInclusos}
-        onToggle={p.toggleCobertura}
-      />
-      <ChipGroup
         titulo="Acompanhamentos"
         cor="acompanhamento"
         opcoes={ACOMPANHAMENTOS}
         selecionados={p.acompanhamentos}
         incluso={tamanho?.acompanhamentos ?? null}
-        contagemCompartilhada={p.resumo.totalItensInclusos}
         onToggle={p.toggleAcompanhamento}
       />
       {mostrarSorveteExtra && (

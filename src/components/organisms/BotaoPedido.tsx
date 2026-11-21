@@ -14,8 +14,6 @@ function montarMensagem(r: Resumo, produto: string): string {
   if (!r.tamanho) return '';
   const linhas: string[] = [`Olá! Quero montar meu ${produto} 🍨`, ''];
   linhas.push(`🥤 Tamanho: ${r.tamanho.volume} (${formatarPreco(r.tamanho.preco)})`);
-  if (r.frutas.length) linhas.push(`🍓 Frutas: ${r.frutas.join(', ')}`);
-  if (r.coberturas.length) linhas.push(`🍫 Coberturas: ${r.coberturas.join(', ')}`);
   if (r.acompanhamentos.length)
     linhas.push(`✨ Acompanhamentos: ${r.acompanhamentos.join(', ')}`);
   if (r.sorvetes.length) linhas.push(`🍨 Sorvetes: ${r.sorvetes.join(', ')}`);
