@@ -5,7 +5,6 @@ import {
   PRECO_ADICIONAL_ITEM,
   PRECO_SORVETE_KG,
   PRECO_TRUFADO,
-  type TamanhoAcai,
 } from '../../data/menu';
 import { CampoGramas } from '../atoms/CampoGramas';
 
@@ -15,8 +14,6 @@ interface Props {
   /** Quando ausente, o cartão de Açaí Zero não aparece. */
   acaiZeroQtd?: number;
   onAcaiZeroQtd?: (qtd: number) => void;
-  /** Tamanho escolhido — define o limite de gramas do sorvete. */
-  tamanho?: TamanhoAcai | null;
   /** Quando ausente, o cartão de sorvete por peso não aparece. */
   sorveteGramas?: number | null;
   onSorveteGramas?: (g: number | null) => void;
@@ -28,12 +25,9 @@ export function Extras({
   onTrufado,
   acaiZeroQtd,
   onAcaiZeroQtd,
-  tamanho,
   sorveteGramas,
   onSorveteGramas,
 }: Props) {
-  const maxGramas = tamanho ? parseInt(tamanho.volume, 10) : 0;
-
   return (
     <div className="mt-6 flex flex-col gap-3">
       <div className="rounded-xl bg-amber px-5 py-4 text-deep">
@@ -132,7 +126,7 @@ export function Extras({
                 Sorvete por cima
               </div>
               <div className="mt-0.5 text-xs opacity-90">
-                {formatarPreco(PRECO_SORVETE_KG)}/kg · até {maxGramas}g
+                {formatarPreco(PRECO_SORVETE_KG)}/kg. Quantos ml, em média?
               </div>
             </div>
           </div>
@@ -140,9 +134,8 @@ export function Extras({
             <CampoGramas
               id="sorvete-gramas"
               valor={sorveteGramas ?? null}
-              max={maxGramas}
               onChange={onSorveteGramas}
-              placeholder={`Ex.: 200 (até ${maxGramas}g)`}
+              placeholder="Ex.: 200"
             />
           </div>
         </div>

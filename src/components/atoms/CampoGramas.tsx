@@ -1,20 +1,14 @@
 interface Props {
   id: string;
   valor: number | null;
-  /** Máximo permitido (ml do tamanho escolhido). */
-  max: number;
   placeholder: string;
   onChange: (valor: number | null) => void;
 }
 
-/** Átomo: campo numérico para o cliente dizer quantas gramas de sorvete quer. */
-export function CampoGramas({ id, valor, max, placeholder, onChange }: Props) {
+/** Átomo: campo numérico para o cliente dizer quantos ml de sorvete quer. */
+export function CampoGramas({ id, valor, placeholder, onChange }: Props) {
   function lidarComMudanca(texto: string) {
-    if (texto === '') {
-      onChange(null);
-      return;
-    }
-    onChange(Math.max(0, Math.min(max, Number(texto))));
+    onChange(texto === '' ? null : Math.max(0, Number(texto)));
   }
 
   return (
@@ -24,14 +18,13 @@ export function CampoGramas({ id, valor, max, placeholder, onChange }: Props) {
         type="number"
         inputMode="numeric"
         min={0}
-        max={max}
         step={10}
         value={valor ?? ''}
         onChange={(e) => lidarComMudanca(e.target.value)}
         placeholder={placeholder}
         className="w-full bg-transparent text-sm text-white placeholder:text-white/50 focus-visible:outline-none"
       />
-      <span className="text-sm font-bold text-white/70">g</span>
+      <span className="text-sm font-bold text-white/70">ml</span>
     </div>
   );
 }

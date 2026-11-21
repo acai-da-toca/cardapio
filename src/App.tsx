@@ -105,7 +105,6 @@ function montarFluxoEstiloAcai(
           onTrufado={p.setTrufado}
           acaiZeroQtd={p.acaiZeroQtd}
           onAcaiZeroQtd={p.setAcaiZeroQtd}
-          tamanho={tamanho}
           sorveteGramas={mostrarSorveteExtra ? p.sorveteGramas : undefined}
           onSorveteGramas={mostrarSorveteExtra ? p.setSorveteGramas : undefined}
         />

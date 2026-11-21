@@ -36,7 +36,7 @@ export function ResumoPedido({
         <Linha label="Acompanhamentos">{resumo.acompanhamentos.join(', ')}</Linha>
       )}
       {resumo.sorveteGramas !== null && resumo.sorveteGramas > 0 && (
-        <Linha label={`Sorvete (${resumo.sorveteGramas}g)`}>
+        <Linha label={`Sorvete (${resumo.sorveteGramas}ml)`}>
           {formatarPreco(resumo.valorSorvete ?? 0)}
         </Linha>
       )}

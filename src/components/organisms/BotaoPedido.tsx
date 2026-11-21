@@ -18,7 +18,7 @@ function montarMensagem(r: Resumo, produto: string): string {
     linhas.push(`✨ Acompanhamentos: ${r.acompanhamentos.join(', ')}`);
   if (r.sorveteGramas)
     linhas.push(
-      `🍨 Sorvete (${r.sorveteGramas}g): ${formatarPreco(r.valorSorvete ?? 0)}`,
+      `🍨 Sorvete (${r.sorveteGramas}ml): ${formatarPreco(r.valorSorvete ?? 0)}`,
     );
   if (r.adicionais.length)
     linhas.push(
