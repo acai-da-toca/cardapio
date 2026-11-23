@@ -16,6 +16,9 @@ export interface ResumoPedido {
   trufado: string | null;
   acaiZeroQtd: number;
   formaPagamento: string | null;
+  // acompanhamentos + sorvetes somados — sorvete é um tipo de acompanhamento,
+  // então conta na mesma cota, não em duas separadas
+  totalItensContados: number;
   totalExtrasItens: number;
   valorExtras: number;
   valorTrufado: number;
@@ -70,8 +73,9 @@ export function usePedido() {
   }
 
   const resumo: ResumoPedido = useMemo(() => {
+    const totalItensContados = acompanhamentos.length + sorvetes.length;
     const totalExtrasItens = tamanho
-      ? Math.max(0, acompanhamentos.length - tamanho.acompanhamentos)
+      ? Math.max(0, totalItensContados - tamanho.acompanhamentos)
       : 0;
     const valorExtras = totalExtrasItens * PRECO_ADICIONAL_ITEM;
     const valorTrufado = trufado ? PRECO_TRUFADO : 0;
@@ -88,6 +92,7 @@ export function usePedido() {
       trufado,
       acaiZeroQtd,
       formaPagamento,
+      totalItensContados,
       totalExtrasItens,
       valorExtras,
       valorTrufado,

@@ -90,6 +90,7 @@ function montarFluxoEstiloAcai(
         opcoes={ACOMPANHAMENTOS}
         selecionados={p.acompanhamentos}
         incluso={tamanho?.acompanhamentos ?? null}
+        contagemCompartilhada={p.resumo.totalItensContados}
         onToggle={p.toggleAcompanhamento}
       />
       {mostrarSorveteExtra && (
@@ -100,6 +101,7 @@ function montarFluxoEstiloAcai(
             opcoes={SORVETES}
             selecionados={p.sorvetes}
             incluso={tamanho?.acompanhamentos ?? null}
+            contagemCompartilhada={p.resumo.totalItensContados}
             onToggle={p.toggleSorvete}
           />
           {p.sorvetes.length > 0 && (
