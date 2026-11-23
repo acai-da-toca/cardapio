@@ -16,10 +16,9 @@ function montarMensagem(r: Resumo, produto: string): string {
   linhas.push(`🥤 Tamanho: ${r.tamanho.volume} (${formatarPreco(r.tamanho.preco)})`);
   if (r.acompanhamentos.length)
     linhas.push(`✨ Acompanhamentos: ${r.acompanhamentos.join(', ')}`);
-  if (r.sorveteGramas)
-    linhas.push(
-      `🍨 Sorvete (${r.sorveteGramas}ml): ${formatarPreco(r.valorSorvete ?? 0)}`,
-    );
+  if (r.sorvetes.length)
+    linhas.push(`🍨 Sorvetes (por peso, combinar valor): ${r.sorvetes.join(', ')}`);
+  if (r.observacaoSorvete) linhas.push(`📝 Obs. sorvete: ${r.observacaoSorvete}`);
   if (r.adicionais.length)
     linhas.push(
       `➕ Adicionais: ${r.adicionais.join(', ')} (${formatarPreco(r.valorAdicionais)})`,
@@ -28,7 +27,10 @@ function montarMensagem(r: Resumo, produto: string): string {
   if (trufado) linhas.push(`🍯 Trufado: ${trufado}`);
   if (r.acaiZeroQtd > 0)
     linhas.push(`0️⃣ Açaí Zero (${r.acaiZeroQtd}x): ${formatarPreco(r.valorAcaiZero)}`);
-  linhas.push('', `💰 Total: ${formatarPreco(r.total)}`);
+  const rotuloTotal = r.temItemAConfirmar ? `Total do ${produto}` : 'Total';
+  linhas.push('', `💰 ${rotuloTotal}: ${formatarPreco(r.total)}`);
+  if (r.temItemAConfirmar)
+    linhas.push('(não inclui o sorvete, valor combinado à parte)');
   const pagamento = FORMAS_PAGAMENTO.find((f) => f.id === r.formaPagamento)?.nome;
   if (pagamento) linhas.push(`💳 Pagamento: ${pagamento}`);
   return linhas.join('\n');

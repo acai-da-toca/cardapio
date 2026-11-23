@@ -35,10 +35,11 @@ export function ResumoPedido({
       {resumo.acompanhamentos.length > 0 && (
         <Linha label="Acompanhamentos">{resumo.acompanhamentos.join(', ')}</Linha>
       )}
-      {resumo.sorveteGramas !== null && resumo.sorveteGramas > 0 && (
-        <Linha label={`Sorvete (${resumo.sorveteGramas}ml)`}>
-          {formatarPreco(resumo.valorSorvete ?? 0)}
-        </Linha>
+      {resumo.sorvetes.length > 0 && (
+        <Linha label="Sorvetes (por peso)">{resumo.sorvetes.join(', ')}</Linha>
+      )}
+      {resumo.observacaoSorvete && (
+        <Linha label="Obs. sorvete">{resumo.observacaoSorvete}</Linha>
       )}
       {resumo.adicionais.length > 0 && (
         <Linha label="Adicionais">
@@ -62,9 +63,14 @@ export function ResumoPedido({
       )}
 
       <div className="mt-3 flex items-center justify-between border-t border-white/35 pt-3 text-lg font-bold">
-        <span>Total</span>
+        <span>{resumo.temItemAConfirmar ? `Total do ${produto}` : 'Total'}</span>
         <span className="text-2xl text-amber">{formatarPreco(resumo.total)}</span>
       </div>
+      {resumo.temItemAConfirmar && (
+        <p className="mt-1 text-xs text-white/60">
+          Não inclui o sorvete, vendido por peso. O valor é combinado com a loja pelo WhatsApp.
+        </p>
+      )}
       <p className="mt-1 text-xs text-white/60">
         Entrega grátis a partir de {formatarPreco(ENTREGA_GRATIS_A_PARTIR_DE)}.
       </p>

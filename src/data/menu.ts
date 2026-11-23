@@ -1,7 +1,7 @@
 // Dados do cardápio "Monte seu Açaí".
 // Centralizados aqui para facilitar manutenção de preços e itens.
 
-export type ItemCategoria = 'acompanhamento' | 'adicional';
+export type ItemCategoria = 'acompanhamento' | 'sorvete' | 'adicional';
 
 export interface TamanhoAcai {
   id: string;
@@ -30,9 +30,8 @@ export const TAMANHOS_SORVETE: TamanhoAcai[] = [
   { id: 'sorvete-500', volume: '500ml', preco: 28.0, acompanhamentos: 4 },
 ];
 
-// Frutas, coberturas, sabores de sorvete e os antigos acompanhamentos agora
-// são tudo uma lista só — a loja não separa mais por categoria, é tudo
-// "acompanhamento".
+// Frutas, coberturas e os antigos acompanhamentos agora são tudo uma lista
+// só — a loja não separa mais por categoria, é tudo "acompanhamento".
 export const ACOMPANHAMENTOS: string[] = [
   'Morango',
   'Banana',
@@ -62,16 +61,23 @@ export const ACOMPANHAMENTOS: string[] = [
   'Biscoito Look Wafer',
   'Nutella',
   'Ovomaltine',
+];
+
+// Sorvete é vendido por peso, não por item — por isso não tem preço fixo
+// aqui; o cliente escreve o que quer no campo de observação e a loja confirma
+// o valor pelo WhatsApp. O mousse (adicional) já tem preço fixo por unidade.
+export const SORVETES: string[] = [
+  'Morango',
+  'Ovomaltine',
+  'Chocolate',
   'Pedacinho do Céu',
   'Maracujá Trufado',
   'Ninho Trufado',
   'Iogurte',
 ];
 
-// Sorvete por cima do açaí é vendido por peso (R$59,99/kg). O cliente diz
-// quantas gramas quer (até o volume do tamanho escolhido, em ml) e o sistema
-// calcula o valor sozinho. O sorvete como produto principal tem tamanho
-// fixo, ver TAMANHOS_SORVETE.
+// Preço de referência do sorvete por peso (informativo — o valor final é
+// combinado com a loja, já que o cliente só escreve uma observação livre).
 export const PRECO_SORVETE_KG = 59.99;
 
 export const ADICIONAIS: string[] = ['Mousse Maracujá', 'Mousse Morango'];
