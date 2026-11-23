@@ -76,10 +76,6 @@ export const SORVETES: string[] = [
   'Iogurte',
 ];
 
-// Preço de referência do sorvete por peso (informativo — o valor final é
-// combinado com a loja, já que o cliente só escreve uma observação livre).
-export const PRECO_SORVETE_KG = 59.99;
-
 export const ADICIONAIS: string[] = ['Mousse Maracujá', 'Mousse Morango'];
 
 export const COPO_TRUFADO: OpcaoTrufado[] = [
