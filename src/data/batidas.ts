@@ -31,5 +31,6 @@ export const SABORES_BATIDA: SaborBatida[] = [
   { id: 'nutella', nome: 'Açaí com Nutella', precos: PRECO_ESPECIAL },
   { id: 'maracuja', nome: 'Açaí Maracujá', precos: PRECO_ESPECIAL },
   { id: 'morango', nome: 'Açaí Morango', precos: PRECO_ESPECIAL },
-  { id: 'cookie', nome: 'Açaí Cookie', precos: PRECO_ESPECIAL },
+  { id: 'mousse-limao', nome: 'Mousse de Limão', precos: PRECO_ESPECIAL },
+  { id: 'creme-trufa', nome: 'Creme de Trufa', precos: PRECO_ESPECIAL },
 ];
