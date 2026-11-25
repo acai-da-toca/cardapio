@@ -36,10 +36,9 @@ import { usePedidoBatida } from './hooks/usePedidoBatida';
  * sorvete — mesmas categorias e regras, só troca o estado, a tabela de
  * tamanhos e o nome do produto nos textos (resumo e mensagem do WhatsApp).
  *
- * O grupo "Sorvetes" (bola de sorvete por cima, vendida por peso) só faz
- * sentido como extra do açaí — dentro do próprio fluxo do sorvete ficaria
- * redundante ("pedir sorvete dentro do pedido de sorvete"), por isso só
- * aparece quando mostrarSorveteExtra é true.
+ * O grupo de sabores de sorvete aparece nos dois: no açaí é um extra (bola
+ * de sorvete por cima, "Sorvetes"); no fluxo do sorvete em si é a escolha
+ * principal do produto, por isso o título muda pra "Sabores".
  */
 function montarFluxoEstiloAcai(
   p: ReturnType<typeof usePedido>,
@@ -49,7 +48,7 @@ function montarFluxoEstiloAcai(
     onSelecionar: ReturnType<typeof usePedido>['escolherTamanho'];
   }) => React.ReactElement,
   tamanhos: TamanhoAcai[],
-  mostrarSorveteExtra: boolean,
+  tituloSorvete: string,
 ) {
   const { tamanho } = p;
 
@@ -93,34 +92,36 @@ function montarFluxoEstiloAcai(
         contagemCompartilhada={p.resumo.totalItensContados}
         onToggle={p.toggleAcompanhamento}
       />
-      {mostrarSorveteExtra && (
-        <>
-          <ChipGroup
-            titulo="Sorvetes"
-            cor="sorvete"
-            opcoes={SORVETES}
-            selecionados={p.sorvetes}
-            incluso={tamanho?.acompanhamentos ?? null}
-            contagemCompartilhada={p.resumo.totalItensContados}
-            onToggle={p.toggleSorvete}
+      <ChipGroup
+        titulo={tituloSorvete}
+        cor="sorvete"
+        opcoes={SORVETES}
+        selecionados={p.sorvetes}
+        incluso={tamanho?.acompanhamentos ?? null}
+        contagemCompartilhada={p.resumo.totalItensContados}
+        onToggle={p.toggleSorvete}
+      />
+      {p.sorvetes.length > 0 && (
+        <div className="-mt-3 mb-5">
+          <label
+            htmlFor={`observacao-sorvete-${produto}`}
+            className="mb-1.5 block text-xs text-white/70"
+          >
+            {produto === 'açaí'
+              ? 'Sorvete é vendido por peso. Quer dizer quanto ou algo específico?'
+              : 'Quer dividir os sabores de algum jeito ou dizer algo específico?'}
+          </label>
+          <CampoObservacao
+            id={`observacao-sorvete-${produto}`}
+            valor={p.observacaoSorvete}
+            onChange={p.setObservacaoSorvete}
+            placeholder={
+              produto === 'açaí'
+                ? 'Ex.: 300ml, metade morango e metade chocolate...'
+                : 'Ex.: metade morango e metade chocolate...'
+            }
           />
-          {p.sorvetes.length > 0 && (
-            <div className="-mt-3 mb-5">
-              <label
-                htmlFor={`observacao-sorvete-${produto}`}
-                className="mb-1.5 block text-xs text-white/70"
-              >
-                Sorvete é vendido por peso. Quer dizer quanto ou algo específico?
-              </label>
-              <CampoObservacao
-                id={`observacao-sorvete-${produto}`}
-                valor={p.observacaoSorvete}
-                onChange={p.setObservacaoSorvete}
-                placeholder="Ex.: 300ml, metade morango e metade chocolate..."
-              />
-            </div>
-          )}
-        </>
+        </div>
       )}
       <ChipGroup
         titulo="Adicionais"
@@ -170,14 +171,14 @@ export default function App() {
     'açaí',
     SeletorTamanho,
     TAMANHOS,
-    true,
+    'Sorvetes',
   );
   const { topo: topoSorvete, band: bandSorvete } = montarFluxoEstiloAcai(
     sorveteSelfService,
     'sorvete',
     SeletorTamanhoSorvete,
     TAMANHOS_SORVETE,
-    false,
+    'Sabores',
   );
 
   // Rodapé compartilhado pelos dois modos (conteúdo idêntico ao de antes).

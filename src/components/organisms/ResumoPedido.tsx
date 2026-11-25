@@ -22,6 +22,10 @@ export function ResumoPedido({
   if (!tamanho) return null;
 
   const nomeTrufado = COPO_TRUFADO.find((t) => t.id === resumo.trufado)?.nome;
+  // No fluxo do açaí, sorvete é um extra sem preço fixo (vendido por peso,
+  // combinado à parte). No fluxo do próprio sorvete, os sabores já estão
+  // inclusos no preço do tamanho — não há nada a confirmar.
+  const temItemAConfirmar = produto === 'açaí' && resumo.temItemAConfirmar;
 
   return (
     <div className="mt-5 rounded-xl border border-white/30 bg-white/10 px-5 py-4 text-white">
@@ -36,7 +40,9 @@ export function ResumoPedido({
         <Linha label="Acompanhamentos">{resumo.acompanhamentos.join(', ')}</Linha>
       )}
       {resumo.sorvetes.length > 0 && (
-        <Linha label="Sorvetes (por peso)">{resumo.sorvetes.join(', ')}</Linha>
+        <Linha label={produto === 'açaí' ? 'Sorvetes (por peso)' : 'Sabores'}>
+          {resumo.sorvetes.join(', ')}
+        </Linha>
       )}
       {resumo.observacaoSorvete && (
         <Linha label="Obs. sorvete">{resumo.observacaoSorvete}</Linha>
@@ -63,10 +69,10 @@ export function ResumoPedido({
       )}
 
       <div className="mt-3 flex items-center justify-between border-t border-white/35 pt-3 text-lg font-bold">
-        <span>{resumo.temItemAConfirmar ? `Total do ${produto}` : 'Total'}</span>
+        <span>{temItemAConfirmar ? `Total do ${produto}` : 'Total'}</span>
         <span className="text-2xl text-amber">{formatarPreco(resumo.total)}</span>
       </div>
-      {resumo.temItemAConfirmar && (
+      {temItemAConfirmar && (
         <p className="mt-1 text-xs text-white/60">
           Não inclui o sorvete, vendido por peso. O valor é combinado com a loja pelo WhatsApp.
         </p>

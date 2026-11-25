@@ -12,12 +12,20 @@ interface Props {
 /** Monta a mensagem de pedido em texto a partir do resumo. */
 function montarMensagem(r: Resumo, produto: string): string {
   if (!r.tamanho) return '';
+  // No fluxo do açaí, sorvete é um extra sem preço fixo (vendido por peso,
+  // combinado à parte). No fluxo do próprio sorvete, os sabores já estão
+  // inclusos no preço do tamanho — não há nada a confirmar.
+  const temItemAConfirmar = produto === 'açaí' && r.temItemAConfirmar;
   const linhas: string[] = [`Olá! Quero montar meu ${produto} 🍨`, ''];
   linhas.push(`🥤 Tamanho: ${r.tamanho.volume} (${formatarPreco(r.tamanho.preco)})`);
   if (r.acompanhamentos.length)
     linhas.push(`✨ Acompanhamentos: ${r.acompanhamentos.join(', ')}`);
   if (r.sorvetes.length)
-    linhas.push(`🍨 Sorvetes (por peso, combinar valor): ${r.sorvetes.join(', ')}`);
+    linhas.push(
+      produto === 'açaí'
+        ? `🍨 Sorvetes (por peso, combinar valor): ${r.sorvetes.join(', ')}`
+        : `🍨 Sabores: ${r.sorvetes.join(', ')}`,
+    );
   if (r.observacaoSorvete) linhas.push(`📝 Obs. sorvete: ${r.observacaoSorvete}`);
   if (r.adicionais.length)
     linhas.push(
@@ -27,9 +35,9 @@ function montarMensagem(r: Resumo, produto: string): string {
   if (trufado) linhas.push(`🍯 Trufado: ${trufado}`);
   if (r.acaiZeroQtd > 0)
     linhas.push(`0️⃣ Açaí Zero (${r.acaiZeroQtd}x): ${formatarPreco(r.valorAcaiZero)}`);
-  const rotuloTotal = r.temItemAConfirmar ? `Total do ${produto}` : 'Total';
+  const rotuloTotal = temItemAConfirmar ? `Total do ${produto}` : 'Total';
   linhas.push('', `💰 ${rotuloTotal}: ${formatarPreco(r.total)}`);
-  if (r.temItemAConfirmar)
+  if (temItemAConfirmar)
     linhas.push('(não inclui o sorvete, valor combinado à parte)');
   const pagamento = FORMAS_PAGAMENTO.find((f) => f.id === r.formaPagamento)?.nome;
   if (pagamento) linhas.push(`💳 Pagamento: ${pagamento}`);
